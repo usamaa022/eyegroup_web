@@ -1,0 +1,266 @@
+{
+  "meta": {
+    "title": "Test Medic Web - Usama | Compléments Médicaux Premium",
+    "description": "Compléments médicaux importés de haute qualité pour votre santé et votre bien-être"
+  },
+  "header": {
+    "logo": "Test Medic Web - Usama",
+    "home": "Accueil",
+    "products": "Produits",
+    "about": "À propos",
+    "science": "Science",
+    "contact": "Contact"
+  },
+  "hero": {
+    "before": "Avant",
+    "after": "Après",
+    "beforeAlt": "Image avant traitement",
+    "afterAlt": "Image après traitement",
+    "resultsTitle": "Résultats visibles en 30 jours",
+    "resultsDescription": "Notre formule cliniquement prouvée transforme la santé de la peau avec des ingrédients naturels",
+    "title": "Compléments médicaux premium pour une santé optimale",
+    "subtitle": "Formulés scientifiquement, testés cliniquement, importés avec les normes de qualité les plus élevées pour soutenir votre parcours de santé.",
+    "cta1": "Découvrir les produits",
+    "cta2": "Découvrir la science",
+    "highlightWord1": "Médicaux",
+    "highlightWord2": "Compléments"
+  },
+  "products": {
+    "title": "Notre gamme de compléments premium",
+    "subtitle": "Compléments soigneusement formulés ciblant des besoins de santé spécifiques avec des ingrédients cliniquement prouvés.",
+    "searchPlaceholder": "Rechercher des produits...",
+    "allProducts": "Tous les produits",
+    "more": "plus",
+    "viewDetails": "Voir les détails",
+    "noProductsFound": "Aucun produit trouvé correspondant à vos critères de recherche.",
+    "initialProducts": [
+      {
+        "name": "Immunité Boost Pro",
+        "description": "Formule avancée pour renforcer votre système immunitaire avec des ingrédients naturels.",
+        "benefits": [
+          "Améliore la réponse immunitaire",
+          "Riche en antioxydants",
+          "Soutient le bien-être général",
+          "Cliniquement prouvé pour réduire les jours de maladie de 40%"
+        ],
+        "dosage": "Prendre 1 capsule par jour avec de la nourriture",
+        "ingredients": [
+          "Vitamine C (500mg)",
+          "Vitamine D3 (2000 UI)",
+          "Zinc (15mg)",
+          "Extrait de sureau (300mg)",
+          "Echinacée purpurea (200mg)"
+        ],
+        "medicalInfo": {
+          "contraindications": "Non recommandé pour les personnes souffrant de troubles auto-immuns sans supervision médicale",
+          "interactions": "Peut interagir avec les médicaments immunosuppresseurs",
+          "storage": "Conserver à température ambiante, à l'abri de la lumière directe du soleil"
+        }
+      },
+      {
+        "name": "Soulagement Articulaire Max",
+        "description": "Soutien articulaire premium avec glucosamine, chondroïtine et MSM pour une mobilité optimale.",
+        "benefits": [
+          "Réduit l'inconfort articulaire",
+          "Soutient la santé du cartilage",
+          "Favorise la flexibilité",
+          "Montre une amélioration de la mobilité articulaire de 35% dans les essais cliniques"
+        ],
+        "dosage": "Prendre 2 capsules par jour, de préférence avec les repas",
+        "ingredients": [
+          "Sulfate de glucosamine (1500mg)",
+          "Sulfate de chondroïtine (1200mg)",
+          "MSM (Méthylsulfonylméthane) (1000mg)",
+          "Extrait de curcuma (500mg)",
+          "Boswellia serrata (250mg)"
+        ],
+        "medicalInfo": {
+          "contraindications": "Ne convient pas aux personnes allergiques aux crustacés",
+          "interactions": "Peut interagir avec les anticoagulants",
+          "storage": "Conserver dans un endroit frais et sec"
+        }
+      },
+      {
+        "name": "Cardio Vital",
+        "description": "Complément pour la santé cardiaque avec oméga-3, CoQ10 et stérols végétaux.",
+        "benefits": [
+          "Soutient la fonction cardiovasculaire",
+          "Aide à maintenir un cholestérol sain",
+          "Riche en acides gras essentiels",
+          "Cliniquement prouvé pour réduire le cholestérol LDL de 18%"
+        ],
+        "dosage": "Prendre 1 softgel deux fois par jour avec les repas",
+        "ingredients": [
+          "Huile de poisson oméga-3 (1000mg)",
+          "Coenzyme Q10 (200mg)",
+          "Stérols végétaux (800mg)",
+          "Extrait d'ail (500mg)",
+          "Baie d'aubépine (300mg)"
+        ],
+        "medicalInfo": {
+          "contraindications": "Non recommandé avant une chirurgie en raison d'un risque potentiel de saignement",
+          "interactions": "Peut interagir avec les médicaments contre l'hypertension",
+          "storage": "Réfrigérer après ouverture"
+        }
+      },
+      {
+        "name": "Neuro Focus",
+        "description": "Formule d'amélioration cognitive avec des nootropiques et des nutriments stimulant le cerveau.",
+        "benefits": [
+          "Améliore la mémoire et la concentration",
+          "Soutient la clarté mentale",
+          "Favorise la santé des cellules cérébrales",
+          "Montre une amélioration des performances cognitives de 25% dans les études cliniques"
+        ],
+        "dosage": "Prendre 1 capsule le matin",
+        "ingredients": [
+          "Bacopa Monnieri (300mg)",
+          "Champignon Crinière de lion (500mg)",
+          "Phosphatidylsérine (100mg)",
+          "Ginkgo Biloba (120mg)",
+          "Rhodiola Rosea (200mg)"
+        ],
+        "medicalInfo": {
+          "contraindications": "Non recommandé pour les personnes souffrant de trouble bipolaire",
+          "interactions": "Peut interagir avec les inhibiteurs de la MAO",
+          "storage": "Conserver à température ambiante"
+        }
+      }
+    ]
+  },
+  "categories": {
+    "immunity": "Immunité",
+    "joint": "Santé articulaire",
+    "heart": "Santé cardiaque",
+    "brain": "Santé cérébrale"
+  },
+  "about": {
+    "title": "À propos de Test Medic Web - Usama",
+    "description": "Fondée avec pour mission d'apporter les compléments médicaux de la plus haute qualité sur le marché, Test Medic Web - Usama s'associe à des fabricants de classe mondiale pour importer des produits de santé scientifiquement validés.",
+    "overlayText": "Notre promesse de qualité",
+    "points": [
+      "Contrôle de qualité rigoureux à chaque étape de la production",
+      "Ingrédients cliniquement prouvés à des dosages efficaces",
+      "Processus de sourcing et de fabrication transparents",
+      "Approuvé par les professionnels de santé du monde entier"
+    ]
+  },
+  "science": {
+    "title": "La science derrière nos produits",
+    "description": "Nos compléments sont développés sur la base des dernières recherches scientifiques et formulés par des experts médicaux pour garantir l'efficacité et la sécurité.",
+    "cards": [
+      {
+        "title": "Formulations basées sur des preuves",
+        "description": "Chaque ingrédient est sélectionné sur la base d'études cliniques évaluées par des pairs démontrant son efficacité pour le bénéfice de santé prévu."
+      },
+      {
+        "title": "Assurance qualité",
+        "description": "Des tests rigoureux pour la pureté, la puissance et l'absence de contaminants garantissent que vous recevez exactement ce qui est indiqué sur l'étiquette."
+      },
+      {
+        "title": "Biodisponibilité optimale",
+        "description": "Nous utilisons des systèmes de livraison avancés pour améliorer l'absorption et garantir que votre corps peut utiliser les nutriments efficacement."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "description": "Vous avez des questions sur nos produits ou besoin de recommandations ? Notre équipe d'experts en santé est là pour vous aider.",
+    "callUs": "Appelez-nous",
+    "emailUs": "Envoyez-nous un email",
+    "visitUs": "Visitez-nous",
+    "formTitle": "Envoyez-nous un message",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "email": "Adresse email",
+    "subject": "Sujet",
+    "message": "Message",
+    "firstNamePlaceholder": "Votre prénom",
+    "lastNamePlaceholder": "Votre nom de famille",
+    "emailPlaceholder": "votre.email@example.com",
+    "selectSubject": "Sélectionnez un sujet",
+    "subjectOptions": {
+      "product": "Demande de produit",
+      "order": "Support de commande",
+      "medical": "Questions médicales",
+      "other": "Autre"
+    },
+    "messagePlaceholder": "Votre message ici...",
+    "submit": "Envoyer le message",
+    "phone": "+964 (770) 123-4567",
+    "hours": "Sam-Dim, 9h-17h",
+    "emailResponse": "Réponse généralement sous 24 heures",
+    "address": {
+      "city": "Slemany",
+      "street": "Rue Orzdi, Fin de la rue"
+    }
+  },
+  "footer": {
+    "description": "Compléments médicaux premium soutenus par la science et approuvés par les professionnels de santé.",
+    "products": "Produits",
+    "company": "Entreprise",
+    "resources": "Ressources",
+    "aboutUs": "À propos de nous",
+    "ourScience": "Notre science",
+    "qualityStandards": "Normes de qualité",
+    "press": "Presse",
+    "careers": "Carrières",
+    "blog": "Blog",
+    "research": "Recherche",
+    "faq": "FAQ",
+    "shippingReturns": "Livraison et retours",
+    "contactUs": "Contactez-nous",
+    "copyright": "©",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "sitemap": "Plan du site"
+  },
+  "admin": {
+    "login": "Connexion Admin",
+    "logout": "Déconnexion",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "cancel": "Annuler",
+    "saveChanges": "Sauvegarder les modifications",
+    "editSection": "Modifier la section",
+    "addProduct": "Ajouter un nouveau produit",
+    "editProduct": "Modifier le produit",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce produit ?",
+    "productTabs": {
+      "basic": "Informations de base",
+      "images": "Images",
+      "benefits": "Avantages",
+      "ingredients": "Ingrédients",
+      "medical": "Informations médicales"
+    },
+    "productName": "Nom du produit",
+    "category": "Catégorie",
+    "description": "Description",
+    "dosage": "Instructions de dosage",
+    "productImages": "Images du produit",
+    "productImagesHelp": "Téléchargez jusqu'à 4 images (la première sera l'aperçu principal)",
+    "uploadImage": "Cliquez pour télécharger",
+    "removeImage": "Supprimer",
+    "mainImage": "Aperçu principal",
+    "setAsMain": "Définir comme principal",
+    "productBenefits": "Avantages du produit",
+    "productBenefitsHelp": "Listez jusqu'à 4 avantages clés de ce produit",
+    "benefit": "Avantage",
+    "benefitPlaceholder": "Entrez un avantage",
+    "productIngredients": "Ingrédients",
+    "productIngredientsHelp": "Listez tous les ingrédients actifs avec leurs quantités",
+    "ingredient": "Ingrédient",
+    "ingredientPlaceholder": "Entrez le nom et la quantité de l'ingrédient",
+    "medicalInfo": "Informations médicales",
+    "contraindications": "Contre-indications",
+    "interactions": "Interactions médicamenteuses",
+    "storage": "Instructions de stockage",
+    "title": "Titre",
+    "keyPoints": "Points clés",
+    "keyPoint": "Point clé",
+    "sectionImage": "Image de la section",
+    "overlayText": "Texte de superposition",
+    "changeBefore": "Changer Avant",
+    "changeAfter": "Changer Après"
+  }
+}
