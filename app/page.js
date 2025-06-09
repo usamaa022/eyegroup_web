@@ -5,12 +5,23 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import React from 'react';
+import { auth, db, storage } from './firebase';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+import imageCompression from 'browser-image-compression';
 
 // Admin Context
 const AdminContext = React.createContext();
 
 // Language Context
 const LanguageContext = React.createContext();
+
+// Loading Animation Component
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+  </div>
+);
 
 // Language translations
 const translations = {
@@ -209,7 +220,7 @@ const translations = {
     evidenceBasedFormulations: "Formulations Basées sur des Preuves",
     evidenceBasedDescription: "Chaque ingrédient est sélectionné sur la base d'études cliniques évaluées par des pairs démontrant son efficacité pour le bénéfice de santé prévu.",
     qualityAssurance: "Assurance Qualité",
-    qualityAssuranceDescription: "Des tests rigoureux pour la pureté, la puissance et l'absence de contaminants garantissent que vous recevez exactement ce qui est indiqué sur l'étiquette.",
+    qualityAssuranceDescription: "Des tests rigoureux pour la pureté, la puissance, et l'absence de contaminants garantissent que vous recevez exactement ce qui est indiqué sur l'étiquette.",
     optimalBioavailability: "Biodisponibilité Optimale",
     optimalBioavailabilityDescription: "Nous utilisons des systèmes de livraison avancés pour améliorer l'absorption et garantir que votre corps puisse utiliser les nutriments efficacement.",
     clinicallyProven: "Cliniquement Prouvé",
@@ -412,7 +423,7 @@ const translations = {
   },
 };
 
-// BeforeAfterSlider Component (unchanged)
+// BeforeAfterSlider Component
 const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -508,15 +519,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
               <div className="absolute -inset-2 rounded-full border-2 border-blue-200 border-dashed"></div>
             </div>
           </div>
-          <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-center pointer-events-none">
-            <div
-              className="w-full h-px bg-white"
-              style={{
-                width: `${sliderPosition}%`,
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)'
-              }}
-            ></div>
-          </div>
         </div>
         <div className="absolute top-4 left-4 bg-white bg-opacity-90 px-4 py-2 rounded-full text-sm font-medium text-gray-800 shadow-lg">
           Before
@@ -525,31 +527,11 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
           After
         </div>
       </div>
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 text-center">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Visible Results in 30 Days</h3>
-        <p className="text-gray-700 mb-4">
-          Our clinically proven formula transforms skin health with natural ingredients
-        </p>
-        <div className="flex justify-center space-x-4">
-          <div className="flex items-center">
-            <svg className="w-5 h-5 text-blue-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <span className="text-sm text-gray-700">Dermatologist tested</span>
-          </div>
-          <div className="flex items-center">
-            <svg className="w-5 h-5 text-blue-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <span className="text-sm text-gray-700">92% satisfaction rate</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
-// FadeInWhenVisible Component (unchanged)
+// FadeInWhenVisible Component
 const FadeInWhenVisible = ({ children, delay = 0 }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -574,15 +556,14 @@ const AdminLoginModal = ({ isOpen, onClose, onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      email === process.env.NEXT_PUBLIC_ADMIN_EMAIL &&
-      password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
-    ) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem('isAuthenticated', 'true');
       onLogin();
       setError('');
-    } else {
+    } catch (error) {
       setError('Invalid credentials');
     }
   };
@@ -650,19 +631,34 @@ const AdminLoginModal = ({ isOpen, onClose, onLogin }) => {
 
 // Image Upload Component
 const ImageUpload = ({ images, onImageChange, previewImageIndex, onPreviewChange }) => {
-  const [previewUrls, setPreviewUrls] = useState(images.map(img => img || ''));
+  const [previewUrls, setPreviewUrls] = useState(images || ['', '', '', '']);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFileChange = (index, e) => {
+  const handleFileChange = async (index, e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const newPreviewUrls = [...previewUrls];
-        newPreviewUrls[index] = event.target.result;
-        setPreviewUrls(newPreviewUrls);
-        onImageChange(index, event.target.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        setIsLoading(true);
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const newPreviewUrls = [...previewUrls];
+          newPreviewUrls[index] = event.target.result;
+          setPreviewUrls(newPreviewUrls);
+          onImageChange(index, event.target.result);
+          setIsLoading(false);
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -670,7 +666,7 @@ const ImageUpload = ({ images, onImageChange, previewImageIndex, onPreviewChange
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-900">Product Images</h3>
       <p className="text-sm text-gray-500">Upload up to 4 images (first one will be the main preview)</p>
-
+      {isLoading && <LoadingSpinner />}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[0, 1, 2, 3].map((index) => (
           <div key={index} className="space-y-2">
@@ -733,7 +729,7 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
   const [formData, setFormData] = useState({
     id: product?.id || Date.now(),
     name: product?.name || '',
-    category: product?.category || categories[0] || '',
+    category: product?.category || (categories.length > 0 ? categories[0] : ''),
     description: product?.description || '',
     benefits: product?.benefits || ['', '', '', ''],
     images: product?.images || ['', '', '', ''],
@@ -764,16 +760,28 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
     setFormData(prev => ({ ...prev, images: newImages }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const filteredBenefits = formData.benefits.filter(benefit => benefit.trim() !== '');
     const filteredIngredients = formData.ingredients.filter(ingredient => ingredient.trim() !== '');
 
-    onSave({
+    const productData = {
       ...formData,
       benefits: filteredBenefits,
       ingredients: filteredIngredients
-    });
+    };
+
+    try {
+      if (product?.id) {
+        const productRef = doc(db, 'products', product.id.toString());
+        await updateDoc(productRef, productData);
+      } else {
+        await addDoc(collection(db, 'products'), productData);
+      }
+      onSave(productData);
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
   };
 
   return (
@@ -833,7 +841,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                     required
                   />
                 </div>
-
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
                     Category
@@ -846,15 +853,14 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                     required
                   >
-                    {categories.map(category => (
-                      <option key={category} value={category}>
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
                         {category.charAt(0).toUpperCase() + category.slice(1)}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
-
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                   Description
@@ -869,7 +875,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                   required
                 />
               </div>
-
               <div>
                 <ImageUpload
                   images={formData.images}
@@ -901,7 +906,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                   ))}
                 </div>
               </div>
-
               <div>
                 <label htmlFor="dosage" className="block text-sm font-medium text-gray-700 mb-2">
                   Dosage Instructions
@@ -916,7 +920,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                   required
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-4">
                   Ingredients (up to 10)
@@ -956,7 +959,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                     rows="4"
                   />
                 </div>
-
                 <div>
                   <label htmlFor="interactions" className="block text-sm font-medium text-gray-700 mb-2">
                     Interactions
@@ -972,7 +974,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
                     rows="4"
                   />
                 </div>
-
                 <div>
                   <label htmlFor="storage" className="block text-sm font-medium text-gray-700 mb-2">
                     Storage Instructions
@@ -992,7 +993,6 @@ const ProductForm = ({ product, onSave, onCancel, categories }) => {
             </div>
           )}
         </div>
-
         <div className="flex justify-end p-6 bg-gray-50 border-t border-gray-200">
           <button
             type="button"
@@ -1027,19 +1027,15 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFormData(prev => ({ ...prev, image: event.target.result }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const docRef = doc(db, 'about', 'imageText');
+    await setDoc(docRef, {
+      title: formData.title,
+      subtitle: formData.subtitle,
+      description: formData.description,
+      image: formData.image
+    });
     onSave(formData);
   };
 
@@ -1050,20 +1046,21 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
           <div className="space-y-6">
             <div>
               <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-                Image
+                Image URL
               </label>
               <input
-                type="file"
+                type="text"
                 id="image"
                 name="image"
-                accept="image/*"
-                onChange={handleImageChange}
+                value={formData.image}
+                onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                required
               />
               {formData.image && (
                 <div className="relative h-40 w-full mt-4">
                   <Image
-                    src={formData.image}
+                    src={formData.image.startsWith('/') ? formData.image : `/${formData.image}`}
                     alt="About Us Preview"
                     fill
                     className="object-cover rounded-lg"
@@ -1085,7 +1082,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
                 required
               />
             </div>
-
             <div>
               <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-2">
                 Subtitle
@@ -1100,7 +1096,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
                 required
               />
             </div>
-
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                 Description
@@ -1117,7 +1112,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
             </div>
           </div>
         </div>
-
         <div className="flex justify-end p-6 bg-gray-50 border-t border-gray-200">
           <button
             type="button"
@@ -1138,7 +1132,7 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel }) 
   );
 };
 
-// Main Component with Search Bar in Products Section
+// Main Component
 export default function Home() {
   const [activeTab, setActiveTab] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -1153,139 +1147,54 @@ export default function Home() {
   const [editingAboutText, setEditingAboutText] = useState(false);
   const [language, setLanguage] = useState('en');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Immune Boost Pro',
-      category: 'immunity',
-      description: 'Advanced formula to strengthen your immune system with natural ingredients.',
-      benefits: [
-        'Enhances immune response',
-        'Rich in antioxidants',
-        'Supports overall wellness',
-        'Clinically proven to reduce sick days by 40%'
-      ],
-      image: '/cream9.png',
-      images: ['/cream9.png', '/cream10.png', '/cream3.jpg', ''],
-      previewImageIndex: 0,
-      dosage: 'Take 1 capsule daily with food',
-      ingredients: [
-        'Vitamin C (500mg)',
-        'Vitamin D3 (2000 IU)',
-        'Zinc (15mg)',
-        'Elderberry Extract (300mg)',
-        'Echinacea Purpurea (200mg)'
-      ],
-      medicalInfo: {
-        contraindications: 'Not recommended for individuals with autoimmune disorders without medical supervision',
-        interactions: 'May interact with immunosuppressant medications',
-        storage: 'Store at room temperature, away from direct sunlight'
-      }
-    },
-    {
-      id: 2,
-      name: 'Joint Relief Max',
-      category: 'joint',
-      description: 'Premium joint support with glucosamine, chondroitin, and MSM for optimal mobility.',
-      benefits: [
-        'Reduces joint discomfort',
-        'Supports cartilage health',
-        'Promotes flexibility',
-        'Shown to improve joint mobility by 35% in clinical trials'
-      ],
-      image: '/cream10.png',
-      images: ['/cream10.png', '/cream9.png', '/cream4.png', ''],
-      previewImageIndex: 0,
-      dosage: 'Take 2 capsules daily, preferably with meals',
-      ingredients: [
-        'Glucosamine Sulfate (1500mg)',
-        'Chondroitin Sulfate (1200mg)',
-        'MSM (Methylsulfonylmethane) (1000mg)',
-        'Turmeric Extract (500mg)',
-        'Boswellia Serrata (250mg)'
-      ],
-      medicalInfo: {
-        contraindications: 'Not suitable for individuals with shellfish allergies',
-        interactions: 'May interact with blood thinners',
-        storage: 'Store in a cool, dry place'
-      }
-    },
-    {
-      id: 3,
-      name: 'Cardio Vital',
-      category: 'heart',
-      description: 'Heart health supplement with omega-3s, CoQ10, and plant sterols.',
-      benefits: [
-        'Supports cardiovascular function',
-        'Helps maintain healthy cholesterol',
-        'Rich in essential fatty acids',
-        'Clinically shown to reduce LDL cholesterol by 18%'
-      ],
-      image: '/cream3.jpg',
-      images: ['/cream3.jpg', '/cream10.png', '/cream9.png', ''],
-      previewImageIndex: 0,
-      dosage: 'Take 1 softgel twice daily with meals',
-      ingredients: [
-        'Omega-3 Fish Oil (1000mg)',
-        'Coenzyme Q10 (200mg)',
-        'Plant Sterols (800mg)',
-        'Garlic Extract (500mg)',
-        'Hawthorn Berry (300mg)'
-      ],
-      medicalInfo: {
-        contraindications: 'Not recommended before surgery due to potential bleeding risk',
-        interactions: 'May interact with blood pressure medications',
-        storage: 'Refrigerate after opening'
-      }
-    },
-    {
-      id: 4,
-      name: 'Neuro Focus',
-      category: 'brain',
-      description: 'Cognitive enhancement formula with nootropics and brain-boosting nutrients.',
-      benefits: [
-        'Enhances memory and focus',
-        'Supports mental clarity',
-        'Promotes brain cell health',
-        'Shown to improve cognitive performance by 25% in clinical studies'
-      ],
-      image: '/cream4.png',
-      images: ['/cream4.png', '/cream9.png', '/cream10.png', ''],
-      previewImageIndex: 0,
-      dosage: 'Take 1 capsule in the morning',
-      ingredients: [
-        'Bacopa Monnieri (300mg)',
-        'Lion\'s Mane Mushroom (500mg)',
-        'Phosphatidylserine (100mg)',
-        'Ginkgo Biloba (120mg)',
-        'Rhodiola Rosea (200mg)'
-      ],
-      medicalInfo: {
-        contraindications: 'Not recommended for individuals with bipolar disorder',
-        interactions: 'May interact with MAO inhibitors',
-        storage: 'Store at room temperature'
-      }
-    },
-  ]);
-
-  const [categories, setCategories] = useState(['immunity', 'joint', 'heart', 'brain']);
-
-  const [aboutImage, setAboutImage] = useState('/about-lab.jpg');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [aboutImageText, setAboutImageText] = useState({
     title: 'Our Quality Promise',
     subtitle: 'Every batch tested for purity and potency',
-    description: 'Certified by international health authorities'
+    description: 'Certified by international health authorities',
+    image: '/about-lab.jpg'
   });
 
-  const productRefs = useRef({});
+  useEffect(() => {
+    const authState = localStorage.getItem('isAuthenticated') === 'true';
+    setIsAdmin(authState);
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(collection(db, 'products'));
+      const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProducts(productsData);
+      setIsLoading(false);
+    };
+
+    const fetchCategories = async () => {
+      const querySnapshot = await getDocs(collection(db, 'categories'));
+      const categoriesData = querySnapshot.docs.map(doc => doc.data().name);
+      setCategories(categoriesData);
+    };
+
+    const fetchAboutImageText = async () => {
+      const docRef = doc(db, 'about', 'imageText');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setAboutImageText(docSnap.data());
+      }
+    };
+
+    fetchProducts();
+    fetchCategories();
+    fetchAboutImageText();
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({
-        behavior: 'smooth'
-      });
+      section.scrollIntoView({ behavior: 'smooth' });
       setActiveSection(sectionId);
     }
   };
@@ -1297,10 +1206,7 @@ export default function Home() {
     setTimeout(() => {
       const productsSection = document.getElementById('products');
       if (productsSection) {
-        productsSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+        productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
   };
@@ -1310,44 +1216,73 @@ export default function Home() {
     setShowAdminLogin(false);
   };
 
-  const handleLogout = () => {
-    setIsAdmin(false);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('isAuthenticated');
+      setIsAdmin(false);
+    } catch (error) {
+      console.error('Error signing out: ', error);
+    }
   };
 
   const handleSaveProduct = (product) => {
-    if (editingProduct) {
-      setProducts(products.map(p => p.id === product.id ? product : p));
-    } else {
-      setProducts([...products, product]);
-    }
     setEditingProduct(null);
+    setProducts(prevProducts => {
+      const index = prevProducts.findIndex(p => p.id === product.id);
+      if (index !== -1) {
+        const updatedProducts = [...prevProducts];
+        updatedProducts[index] = product;
+        return updatedProducts;
+      }
+      return [...prevProducts, product];
+    });
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(p => p.id !== id));
+      try {
+        await deleteDoc(doc(db, 'products', id.toString()));
+        setProducts(products.filter(p => p.id !== id));
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
     }
   };
 
-  const handleAddCategory = (newCategory) => {
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    const newCategoryInput = document.getElementById('newCategory');
+    const newCategory = newCategoryInput.value;
     if (newCategory.trim() && !categories.includes(newCategory.trim().toLowerCase())) {
-      setCategories([...categories, newCategory.trim().toLowerCase()]);
+      try {
+        await addDoc(collection(db, 'categories'), { name: newCategory.trim().toLowerCase() });
+        setCategories([...categories, newCategory.trim().toLowerCase()]);
+        newCategoryInput.value = '';
+      } catch (error) {
+        console.error('Error adding category:', error);
+      }
     }
   };
 
-  const handleDeleteCategory = (category) => {
+  const handleDeleteCategory = async (category) => {
     if (window.confirm('Are you sure you want to delete this category? Products in this category will be unaffected.')) {
-      setCategories(categories.filter(c => c !== category));
+      try {
+        const querySnapshot = await getDocs(collection(db, 'categories'));
+        querySnapshot.forEach(async (docSnapshot) => {
+          if (docSnapshot.data().name === category) {
+            await deleteDoc(docSnapshot.ref);
+          }
+        });
+        setCategories(categories.filter(c => c !== category));
+      } catch (error) {
+        console.error('Error deleting category:', error);
+      }
     }
   };
 
   const handleSaveAboutText = (data) => {
-    setAboutImage(data.image);
-    setAboutImageText({
-      title: data.title,
-      subtitle: data.subtitle,
-      description: data.description
-    });
+    setAboutImageText(data);
     setEditingAboutText(false);
   };
 
@@ -1400,7 +1335,6 @@ export default function Home() {
             <link rel="icon" href="/favicon.ico" />
           </Head>
 
-          {/* Enhanced Navigation */}
           <motion.header
             initial={{ y: -100 }}
             animate={{ y: 0 }}
@@ -1418,12 +1352,10 @@ export default function Home() {
                   {t('Test Medic Web - Usama')}
                 </div>
               </motion.div>
-
-              {/* Desktop Navigation */}
               <nav className="hidden md:flex space-x-1 items-center">
-                {['home', 'products', 'about', 'science', 'contact'].map((section) => (
+                {['home', 'products', 'about', 'science', 'contact'].map((section, index) => (
                   <motion.button
-                    key={section}
+                    key={index}
                     onClick={() => scrollToSection(section)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -1436,7 +1368,6 @@ export default function Home() {
                     {t(section)}
                   </motion.button>
                 ))}
-
                 <div className="relative">
                   <motion.button
                     onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
@@ -1487,9 +1418,26 @@ export default function Home() {
                     </motion.div>
                   )}
                 </div>
+                {!isAdmin ? (
+                  <motion.button
+                    onClick={() => setShowAdminLogin(true)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-2 rounded-md font-medium transition-all bg-blue-600 text-white hover:bg-blue-700 ml-2"
+                  >
+                    {t('login')}
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    onClick={handleLogout}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-2 rounded-md font-medium transition-all bg-red-500 text-white hover:bg-red-600 ml-2"
+                  >
+                    {t('logout')}
+                  </motion.button>
+                )}
               </nav>
-
-              {/* Mobile Menu Button */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 className="md:hidden text-gray-800 focus:outline-none p-2"
@@ -1540,8 +1488,6 @@ export default function Home() {
                 </svg>
               </motion.button>
             </div>
-
-            {/* Mobile Menu */}
             <AnimatePresence>
               {isMenuOpen && (
                 <motion.div
@@ -1552,9 +1498,9 @@ export default function Home() {
                   className="md:hidden bg-white shadow-lg"
                 >
                   <div className="flex flex-col py-4 px-4 space-y-2">
-                    {['home', 'products', 'about', 'science', 'contact'].map((section) => (
+                    {['home', 'products', 'about', 'science', 'contact'].map((section, index) => (
                       <motion.button
-                        key={section}
+                        key={index}
                         onClick={() => {
                           scrollToSection(section);
                           setIsMenuOpen(false);
@@ -1618,20 +1564,43 @@ export default function Home() {
                         </motion.div>
                       )}
                     </div>
+                    {!isAdmin ? (
+                      <motion.button
+                        onClick={() => {
+                          setShowAdminLogin(true);
+                          setIsMenuOpen(false);
+                        }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="px-4 py-3 rounded-md text-left font-medium text-white bg-blue-600 hover:bg-blue-700 w-full"
+                      >
+                        {t('login')}
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMenuOpen(false);
+                        }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="px-4 py-3 rounded-md text-left font-medium text-white bg-red-500 hover:bg-red-600 w-full"
+                      >
+                        {t('logout')}
+                      </motion.button>
+                    )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.header>
 
-          {/* Admin Login Modal */}
           <AdminLoginModal
             isOpen={showAdminLogin}
             onClose={() => setShowAdminLogin(false)}
             onLogin={handleLogin}
           />
 
-          {/* Hero Section */}
           <section id="home" className="relative pt-28 pb-20 md:pt-36 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
               <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -1675,27 +1644,6 @@ export default function Home() {
                       {t('Learn the Science')}
                     </motion.button>
                   </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6, ease: [0.17, 0.67, 0.12, 0.99] }}
-                    className="mt-8 flex flex-wrap gap-4"
-                  >
-                    {[
-                      { icon: "✓", text: t('clinicallyProven') },
-                      { icon: "✓", text: t('pharmaceuticalGrade') },
-                      { icon: "✓", text: t('gmpCertified') }
-                    ].map((item, index) => (
-                      <motion.div
-                        key={index}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        className="flex items-center text-gray-700 bg-blue-50 px-4 py-2 rounded-full transition-all duration-200"
-                      >
-                        <span className="mr-2 text-blue-600">{item.icon}</span>
-                        <span className="text-sm font-medium">{item.text}</span>
-                      </motion.div>
-                    ))}
-                  </motion.div>
                 </div>
                 <div className="lg:w-1/2 w-full">
                   <motion.div
@@ -1705,8 +1653,8 @@ export default function Home() {
                     className="relative w-full max-w-2xl mx-auto"
                   >
                     <BeforeAfterSlider
-                      beforeImage="/with_acne.jpg"
-                      afterImage="/without_acne.jpg"
+                      beforeImage='/images/with_acne.jpg'
+                      afterImage="/images/without_acne.jpg"
                     />
                   </motion.div>
                 </div>
@@ -1714,7 +1662,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Products Section with Search Bar */}
           <section id="products" className="py-20 bg-gray-50">
             <div className="container mx-auto px-4 md:px-6">
               <div className="text-center mb-16">
@@ -1729,8 +1676,6 @@ export default function Home() {
                   </p>
                 </FadeInWhenVisible>
               </div>
-
-              {/* Search Bar */}
               <FadeInWhenVisible delay={0.1}>
                 <div className="max-w-2xl mx-auto mb-12">
                   <div className="relative">
@@ -1747,19 +1692,17 @@ export default function Home() {
                   </div>
                 </div>
               </FadeInWhenVisible>
-
-              {/* Product Filters */}
               <FadeInWhenVisible delay={0.2}>
                 <div className="flex flex-wrap justify-center mb-12 gap-2">
                   {[
                     { id: 'all', label: t('allProducts') },
-                    ...categories.map(category => ({
+                    ...categories.map((category, index) => ({
                       id: category,
                       label: t(category)
                     }))
-                  ].map((tab) => (
+                  ].map((tab, index) => (
                     <motion.button
-                      key={tab.id}
+                      key={index}
                       onClick={() => setActiveTab(tab.id)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
@@ -1774,8 +1717,6 @@ export default function Home() {
                   ))}
                 </div>
               </FadeInWhenVisible>
-
-              {/* Add Product Button for Admin */}
               {isAdmin && (
                 <div className="flex justify-end mb-4">
                   <button
@@ -1786,12 +1727,12 @@ export default function Home() {
                   </button>
                 </div>
               )}
-
-              {/* Product Grid */}
-              {filteredProducts.length > 0 ? (
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                   {filteredProducts.map((product, index) => (
-                    <FadeInWhenVisible key={product.id} delay={index * 0.05}>
+                    <FadeInWhenVisible key={index} delay={index * 0.05}>
                       <motion.div
                         whileHover={{ y: -5, boxShadow: "0 10px 20px -5px rgba(0, 0, 0, 0.1)" }}
                         whileTap={{ scale: 0.98 }}
@@ -1799,7 +1740,7 @@ export default function Home() {
                       >
                         <div className="relative h-56 bg-gray-100">
                           <Image
-                            src={product.images[product.previewImageIndex] || product.image || '/placeholder.jpg'}
+                            src={product.images && product.images[product.previewImageIndex] ? product.images[product.previewImageIndex] : '/placeholder.jpg'}
                             alt={product.name}
                             fill
                             className="object-cover"
@@ -1810,12 +1751,12 @@ export default function Home() {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
                           <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
                           <div className="flex flex-wrap gap-2 mb-4">
-                            {product.benefits.slice(0, 2).map((benefit, index) => (
-                              <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                            {product.benefits && product.benefits.slice(0, 2).map((benefit, benefitIndex) => (
+                              <span key={benefitIndex} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                                 {benefit}
                               </span>
                             ))}
-                            {product.benefits.length > 2 && (
+                            {product.benefits && product.benefits.length > 2 && (
                               <span className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full">
                                 +{product.benefits.length - 2} {t('more')}
                               </span>
@@ -1868,7 +1809,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Product Modal */}
           <AnimatePresence>
             {isModalOpen && selectedProduct && (
               <motion.div
@@ -1890,13 +1830,13 @@ export default function Home() {
                     <div className="md:w-1/2 p-6 bg-gray-50">
                       <div className="relative h-64 md:h-full min-h-[300px]">
                         <Image
-                          src={selectedProduct.images[selectedProduct.previewImageIndex] || selectedProduct.image || '/placeholder.jpg'}
+                          src={selectedProduct.images && selectedProduct.images[selectedProduct.previewImageIndex] ? selectedProduct.images[selectedProduct.previewImageIndex] : '/placeholder.jpg'}
                           alt={selectedProduct.name}
                           fill
                           className="object-contain"
                         />
                       </div>
-                      {selectedProduct.images.filter(img => img).length > 1 && (
+                      {selectedProduct.images && selectedProduct.images.filter(img => img).length > 1 && (
                         <div className="grid grid-cols-4 gap-2 mt-4">
                           {selectedProduct.images.map((image, index) => (
                             image && (
@@ -1937,17 +1877,15 @@ export default function Home() {
                           </svg>
                         </motion.button>
                       </div>
-
                       <div className="mb-6">
                         <h3 className="font-semibold text-lg text-gray-800 mb-2">{t('description')}</h3>
                         <p className="text-gray-600">{selectedProduct.description}</p>
                       </div>
-
                       <div className="mb-6">
                         <h3 className="font-semibold text-lg text-gray-800 mb-3">{t('keyBenefits')}</h3>
                         <ul className="space-y-2">
-                          {selectedProduct.benefits.map((benefit, index) => (
-                            <li key={index} className="flex items-start">
+                          {selectedProduct.benefits && selectedProduct.benefits.map((benefit, benefitIndex) => (
+                            <li key={benefitIndex} className="flex items-start">
                               <svg className="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
@@ -1956,18 +1894,16 @@ export default function Home() {
                           ))}
                         </ul>
                       </div>
-
                       <div className="mb-6">
                         <h3 className="font-semibold text-lg text-gray-800 mb-2">{t('dosage')}</h3>
                         <p className="text-gray-700 font-medium">{selectedProduct.dosage}</p>
                       </div>
-
                       <div className="mb-6">
                         <h3 className="font-semibold text-lg text-gray-800 mb-3">{t('activeIngredients')}</h3>
                         <div className="bg-gray-50 rounded-lg p-4">
                           <ul className="space-y-2">
-                            {selectedProduct.ingredients.map((ingredient, index) => (
-                              <li key={index} className="flex justify-between border-b border-gray-200 py-2">
+                            {selectedProduct.ingredients && selectedProduct.ingredients.map((ingredient, ingredientIndex) => (
+                              <li key={ingredientIndex} className="flex justify-between border-b border-gray-200 py-2">
                                 <span className="text-gray-700">{ingredient.split('(')[0].trim()}</span>
                                 <span className="text-gray-500 font-medium">{ingredient.match(/\((.*?)\)/)?.[1] || ''}</span>
                               </li>
@@ -1975,19 +1911,18 @@ export default function Home() {
                           </ul>
                         </div>
                       </div>
-
                       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="bg-red-50 p-3 rounded-lg">
                           <h4 className="font-medium text-red-800 mb-1">{t('contraindications')}</h4>
-                          <p className="text-red-700 text-sm">{selectedProduct.medicalInfo.contraindications}</p>
+                          <p className="text-red-700 text-sm">{selectedProduct.medicalInfo?.contraindications}</p>
                         </div>
                         <div className="bg-yellow-50 p-3 rounded-lg">
                           <h4 className="font-medium text-yellow-800 mb-1">{t('interactions')}</h4>
-                          <p className="text-yellow-700 text-sm">{selectedProduct.medicalInfo.interactions}</p>
+                          <p className="text-yellow-700 text-sm">{selectedProduct.medicalInfo?.interactions}</p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
                           <h4 className="font-medium text-green-800 mb-1">{t('storageInstructions')}</h4>
-                          <p className="text-green-700 text-sm">{selectedProduct.medicalInfo.storage}</p>
+                          <p className="text-green-700 text-sm">{selectedProduct.medicalInfo?.storage}</p>
                         </div>
                       </div>
                     </div>
@@ -1997,14 +1932,12 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* Categories Section */}
           {isAdmin && (
             <section className="py-20 bg-white">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="bg-white p-6 rounded-xl shadow-sm">
                   <h2 className="text-xl font-bold text-gray-900 mb-6">{t('categoryManagement')}</h2>
-
-                  <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                  <form onSubmit={handleAddCategory} className="flex flex-col sm:flex-row gap-4 mb-6">
                     <div className="flex-1">
                       <label htmlFor="newCategory" className="block text-sm font-medium text-gray-700 mb-2">
                         {t('newCategory')}
@@ -2018,21 +1951,16 @@ export default function Home() {
                     </div>
                     <div className="flex items-end">
                       <button
-                        onClick={(e) => {
-                          const newCategory = e.target.previousElementSibling.value;
-                          handleAddCategory(newCategory);
-                          e.target.previousElementSibling.value = '';
-                        }}
+                        type="submit"
                         className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
                       >
                         {t('addCategory')}
                       </button>
                     </div>
-                  </div>
-
+                  </form>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {categories.map((category) => (
-                      <div key={category} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    {categories.map((category, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                         <span className="text-gray-800 capitalize">{t(category)}</span>
                         <button
                           onClick={() => handleDeleteCategory(category)}
@@ -2050,7 +1978,6 @@ export default function Home() {
             </section>
           )}
 
-          {/* About Section */}
           <section id="about" className="py-20 bg-white">
             <div className="container mx-auto px-4 md:px-6">
               <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -2101,7 +2028,7 @@ export default function Home() {
                   <FadeInWhenVisible delay={0.2}>
                     <div className="relative h-96 w-full bg-gray-100 rounded-xl overflow-hidden">
                       <Image
-                        src={aboutImage}
+                        src={aboutImageText.image.startsWith('/') ? aboutImageText.image : `/${aboutImageText.image}`}
                         alt="About Us Image"
                         fill
                         className="object-cover"
@@ -2129,7 +2056,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Science Section */}
           <section id="science" className="py-20 bg-gray-50">
             <div className="container mx-auto px-4 md:px-6">
               <div className="text-center mb-16">
@@ -2144,7 +2070,6 @@ export default function Home() {
                   </p>
                 </FadeInWhenVisible>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 {[
                   {
@@ -2159,7 +2084,7 @@ export default function Home() {
                   {
                     icon: (
                       <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                       </svg>
                     ),
                     title: t('qualityAssurance'),
@@ -2192,7 +2117,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* CTA Section */}
           <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
             <div className="container mx-auto px-4 md:px-6 text-center">
               <FadeInWhenVisible>
@@ -2233,7 +2157,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Contact Section */}
           <section id="contact" className="py-20 bg-white">
             <div className="container mx-auto px-4 md:px-6">
               <div className="flex flex-col lg:flex-row gap-12">
@@ -2248,7 +2171,6 @@ export default function Home() {
                       {t('contactDescription')}
                     </p>
                   </FadeInWhenVisible>
-
                   <FadeInWhenVisible delay={0.2}>
                     <div className="space-y-6">
                       {[
@@ -2303,7 +2225,6 @@ export default function Home() {
                     </div>
                   </FadeInWhenVisible>
                 </div>
-
                 <div className="lg:w-1/2">
                   <FadeInWhenVisible delay={0.1}>
                     <motion.div
@@ -2387,7 +2308,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Footer */}
           <footer className="bg-gray-900 text-white pt-16 pb-8">
             <div className="container mx-auto px-4 md:px-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -2436,7 +2356,6 @@ export default function Home() {
                     </div>
                   </FadeInWhenVisible>
                 </div>
-
                 <div>
                   <FadeInWhenVisible>
                     <h3 className="text-lg font-semibold mb-6 text-white">{t('products')}</h3>
@@ -2457,7 +2376,6 @@ export default function Home() {
                     </ul>
                   </FadeInWhenVisible>
                 </div>
-
                 <div>
                   <FadeInWhenVisible>
                     <h3 className="text-lg font-semibold mb-6 text-white">{t('company')}</h3>
@@ -2484,7 +2402,6 @@ export default function Home() {
                     </ul>
                   </FadeInWhenVisible>
                 </div>
-
                 <div>
                   <FadeInWhenVisible>
                     <h3 className="text-lg font-semibold mb-6 text-white">{t('resources')}</h3>
@@ -2512,7 +2429,6 @@ export default function Home() {
                   </FadeInWhenVisible>
                 </div>
               </div>
-
               <div className="border-t border-gray-800 pt-8">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <FadeInWhenVisible>
@@ -2543,7 +2459,6 @@ export default function Home() {
             </div>
           </footer>
 
-          {/* Product Form Modal */}
           <AnimatePresence>
             {editingProduct !== null && (
               <motion.div
@@ -2572,7 +2487,6 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* About Image Text Form Modal */}
           <AnimatePresence>
             {editingAboutText && (
               <motion.div
@@ -2591,7 +2505,7 @@ export default function Home() {
                   onClick={e => e.stopPropagation()}
                 >
                   <AboutImageTextEditor
-                    aboutImage={aboutImage}
+                    aboutImage={aboutImageText.image}
                     aboutImageText={aboutImageText}
                     onSave={handleSaveAboutText}
                     onCancel={() => setEditingAboutText(false)}
