@@ -2472,7 +2472,7 @@ export default function Home() {
           {/* Mobile image container */}
           <div className="lg:hidden relative w-full h-full">
             <Image
-              src={aboutImageText.image || '/about-lab.jpg'}
+              src={aboutImageText.image || '/logo.jpg'}
               alt={t('About Us Image')}
               fill
               className="object-cover"
@@ -2500,7 +2500,7 @@ export default function Home() {
           {/* Desktop image container */}
           <div className="hidden lg:block relative w-full h-full">
             <Image
-              src={aboutImageText.image || '/about-lab.jpg'}
+              src={aboutImageText.image || '/logo.jpg'}
               alt={t('About Us Image')}
               fill
               className="object-cover"
@@ -2683,18 +2683,18 @@ export default function Home() {
                       </p>
                     </FadeInWhenVisible>
                     <FadeInWhenVisible delay={0.2}>
-                      <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
-                        <iframe
-                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509374!2d-122.08424942416683!3d37.4220050451995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fba02425dad8f%3A0x6c296c66619367e!2sGoogleplex!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
-                          width="100%"
-                          height="100%"
-                          style={{ border: 0, borderRadius: '0.75rem' }}
-                          allowFullScreen=""
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                          className="rounded-xl"
-                        ></iframe>
-                      </div>
+                    <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d993.2819834780371!2d45.447408248217236!3d35.55673195195493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2siq!4v1750359654725!5m2!1sen!2siq"
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0, borderRadius: '0.75rem' }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        className="rounded-xl"
+                      ></iframe>
+                    </div>
                     </FadeInWhenVisible>
                   </div>
                 </div>
