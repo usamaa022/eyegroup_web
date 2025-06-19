@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# .gitignore
+.env.local
+.env*.local
+node_modules/
+.DS_Store
+.firebase/
+.firebaserc
