@@ -11,22 +11,20 @@ import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc, setDoc,
 import imageCompression from 'browser-image-compression';
 import { runTransaction } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
-
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
-
   componentDidCatch(error, errorInfo) {
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
     this.setState({ error, errorInfo });
   }
-
   render() {
     if (this.state.hasError) {
       return (
@@ -38,7 +36,7 @@ class ErrorBoundary extends React.Component {
               </svg>
               <h3 className="text-xl font-semibold text-red-800">Something went wrong</h3>
             </div>
-            <p className="text-gray-700 mb-4">Were sorry for the inconvenience. The application has encountered an error.</p>
+            <p className="text-gray-700 mb-4">We're sorry for the inconvenience. The application has encountered an error.</p>
             <div className="bg-gray-100 p-3 rounded text-sm text-gray-800 mb-4">
               <p><strong>Error:</strong> {this.state.error?.message}</p>
             </div>
@@ -114,17 +112,13 @@ const translations = {
     productName: "Product Name",
     category: "Category",
     description: "Description",
-    dosageInstructions: "Dosage Instructions",
+    size: "Size",
     benefits: "Benefits",
     ingredients: "Ingredients",
-    contraindications: "Contraindications",
-    interactions: "Interactions",
-    storageInstructions: "Storage Instructions",
     title: "Title",
     subtitle: "Subtitle",
     productDetails: "Product Details",
     keyBenefits: "Key Benefits",
-    dosage: "Dosage",
     activeIngredients: "Active Ingredients",
     noProductsFound: "No products found",
     tryAdjustingSearch: "Try adjusting your search or filters to find what you're looking for.",
@@ -150,7 +144,7 @@ const translations = {
     copyright: "© {year} Sardeli. All rights reserved.",
     productNamePlaceholder: "Product Name",
     descriptionPlaceholder: "Description",
-    dosagePlaceholder: "Dosage Instructions",
+    sizePlaceholder: "Size",
     benefitPlaceholder: "Benefit {index}",
     ingredientPlaceholder: "Ingredient {index}",
     firstNamePlaceholder: "Your first name",
@@ -199,10 +193,9 @@ const translations = {
     "Upload an image": "Upload an image",
     "Basic Info": "Basic Info",
     "Details": "Details",
-    "Medical Info": "Medical Info",
-    "Benefits (up to 4)": "Benefits (up to 4)",
+    "Benefits (up to 10)": "Benefits (up to 10)",
     "Benefit": "Benefit",
-    "Dosage Instructions": "Dosage Instructions",
+    "Size": "Size",
     "Ingredients (up to 10)": "Ingredients (up to 10)",
     "Ingredient": "Ingredient",
     "Save Product": "Save Product",
@@ -273,17 +266,13 @@ const translations = {
     productName: "Nom du Produit",
     category: "Catégorie",
     description: "Description",
-    dosageInstructions: "Instructions de Dosage",
+    size: "Taille",
     benefits: "Avantages",
     ingredients: "Ingrédients",
-    contraindications: "Contre-indications",
-    interactions: "Interactions",
-    storageInstructions: "Instructions de Stockage",
     title: "Titre",
     subtitle: "Sous-titre",
     productDetails: "Détails du Produit",
     keyBenefits: "Avantages Clés",
-    dosage: "Dosage",
     activeIngredients: "Ingrédients Actifs",
     noProductsFound: "Aucun produit trouvé",
     tryAdjustingSearch: "Essayez d'ajuster votre recherche ou vos filtres pour trouver ce que vous cherchez.",
@@ -309,7 +298,7 @@ const translations = {
     copyright: "© {year} Sardeli. Tous droits réservés.",
     productNamePlaceholder: "Nom du Produit",
     descriptionPlaceholder: "Description",
-    dosagePlaceholder: "Instructions de Dosage",
+    sizePlaceholder: "Taille",
     benefitPlaceholder: "Avantage {index}",
     ingredientPlaceholder: "Ingrédient {index}",
     firstNamePlaceholder: "Votre prénom",
@@ -358,17 +347,16 @@ const translations = {
     "Upload an image": "Télécharger une image",
     "Basic Info": "Informations de Base",
     "Details": "Détails",
-    "Medical Info": "Informations Médicales",
-    "Benefits (up to 4)": "Avantages (jusqu'à 4)",
+    "Benefits (up to 10)": "Avantages (jusqu'à 10)",
     "Benefit": "Avantage",
-    "Dosage Instructions": "Instructions de Dosage",
+    "Size": "Taille",
     "Ingredients (up to 10)": "Ingrédients (jusqu'à 10)",
     "Ingredient": "Ingrédient",
     "Save Product": "Sauvegarder le Produit",
     "Image": "Image",
     "About Us Preview": "Aperçu À Propos",
     "Save Changes": "Sauvegarder les Modifications",
-    "Image size exceeds the maximum limit of 900KB": "La taille de l'image dépasse la limite maximale de 900 Ko",
+    "Image size exceeds the maximum limit of 5MB": "La taille de l'image dépasse la limite maximale de 5MB",
     "Error uploading image": "Erreur lors du téléchargement de l'image",
     "Image uploaded successfully": "Image téléchargée avec succès",
     "Error deleting image": "Erreur lors de la suppression de l'image",
@@ -432,17 +420,13 @@ const translations = {
     productName: "اسم المنتج",
     category: "الفئة",
     description: "الوصف",
-    dosageInstructions: "تعليمات الجرعة",
+    size: "الحجم",
     benefits: "الفوائد",
     ingredients: "المكونات",
-    contraindications: "موانع الاستخدام",
-    interactions: "التفاعلات",
-    storageInstructions: "تعليمات التخزين",
     title: "العنوان",
     subtitle: "العنوان الفرعي",
     productDetails: "تفاصيل المنتج",
     keyBenefits: "الفوائد الرئيسية",
-    dosage: "الجرعة",
     activeIngredients: "المكونات الفعالة",
     noProductsFound: "لم يتم العثور على منتجات",
     tryAdjustingSearch: "حاول تعديل بحثك أو عوامل التصفية للعثور على ما تبحث عنه.",
@@ -460,7 +444,7 @@ const translations = {
     pharmaceuticalGrade: "جودة صيدلانية",
     gmpCertified: "معتمد من قبل م.ع.ج",
     readyToExperience: "هل أنت مستعد لتجربة الفرق مع Sardeli؟",
-    joinThousands: "انضم إلى آلاف المتخصصين في الرعاية الصحية الذين يثقون بمكملاتنا الممتازة لمرضاهم.",
+    joinThousands: "انضم إلى آلاف المتخصصين في الرعاية الصحية الذين يثقون بمكملاتنا المتميزة لمرضاهم.",
     footerDescription: "مكملات طبية متميزة مدعومة بالعلوم وموثوقة من قبل المتخصصين في الرعاية الصحية.",
     privacyPolicy: "سياسة الخصوصية",
     termsOfService: "شروط الخدمة",
@@ -468,7 +452,7 @@ const translations = {
     copyright: "© {year} Sardeli. كل الحقوق محفوظة.",
     productNamePlaceholder: "اسم المنتج",
     descriptionPlaceholder: "الوصف",
-    dosagePlaceholder: "تعليمات الجرعة",
+    sizePlaceholder: "الحجم",
     benefitPlaceholder: "الفائدة {index}",
     ingredientPlaceholder: "المكون {index}",
     firstNamePlaceholder: "اسمك الأول",
@@ -517,17 +501,16 @@ const translations = {
     "Upload an image": "تحميل صورة",
     "Basic Info": "المعلومات الأساسية",
     "Details": "التفاصيل",
-    "Medical Info": "المعلومات الطبية",
-    "Benefits (up to 4)": "الفوائد (حتى 4)",
+    "Benefits (up to 10)": "الفوائد (حتى 10)",
     "Benefit": "فائدة",
-    "Dosage Instructions": "تعليمات الجرعة",
+    "Size": "الحجم",
     "Ingredients (up to 10)": "المكونات (حتى 10)",
     "Ingredient": "مكون",
     "Save Product": "حفظ المنتج",
     "Image": "صورة",
     "About Us Preview": "معاينة عنا",
     "Save Changes": "حفظ التغييرات",
-    "Image size exceeds the maximum limit of 900KB": "حجم الصورة يتجاوز الحد الأقصى البالغ 900 كيلوبايت",
+    "Image size exceeds the maximum limit of 5MB": "حجم الصورة يتجاوز الحد الأقصى البالغ 5MB",
     "Error uploading image": "خطأ في تحميل الصورة",
     "Image uploaded successfully": "تم تحميل الصورة بنجاح",
     "Error deleting image": "خطأ في حذف الصورة",
@@ -622,10 +605,9 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
               src={beforeImage}
               alt="Before treatment"
               fill
-              className="object-cover "
+              className="object-cover"
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-
             />
           </div>
           <div
@@ -668,7 +650,6 @@ const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
     triggerOnce: true,
     threshold: 0.1,
   });
-
   return (
     <motion.div
       ref={ref}
@@ -745,7 +726,7 @@ const AdminLoginModal = ({ isOpen, onClose, onLogin, t }) => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition shadow-sm"
                 required
                 disabled={isLoading}
               />
@@ -798,25 +779,21 @@ const ImageUpload = ({ image, onImageChange, t }) => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    const maxSize = 5 * 1024 * 1024; // Increase to 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
-
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
-
       const options = {
-        maxSizeMB: 5, // Increase compression limit to 5MB
-        maxWidthOrHeight: 2048, // Increase max dimensions
+        maxSizeMB: 5,
+        maxWidthOrHeight: 2048,
         useWebWorker: true,
-        maxIteration: 20, // Increase iteration for better compression
-        initialQuality: 0.8, // Start with higher quality
+        maxIteration: 20,
+        initialQuality: 0.8,
       };
-
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -881,7 +858,7 @@ const ImageUpload = ({ image, onImageChange, t }) => {
   );
 };
 
-// Product Form Component with Tabs
+// ProductForm Component with Tabs
 const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
   const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
@@ -889,16 +866,12 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     name: product?.name || '',
     category: product?.category || (categories.length > 0 ? categories[0] : ''),
     description: product?.description || '',
-    benefits: product?.benefits || ['', '', '', ''],
+    benefits: product?.benefits || ['', '', '', '', '', '', '', '', '', ''],
     image: product?.image || '',
-    dosage: product?.dosage || '',
+    size: product?.size || '',
     ingredients: product?.ingredients || ['', '', '', '', '', '', '', '', '', ''],
-    medicalInfo: product?.medicalInfo || {
-      contraindications: '',
-      interactions: '',
-      storage: ''
-    }
   });
+
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -907,8 +880,7 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     if (!formData.name.trim()) errors.name = t('productName') + ' is required';
     if (!formData.category) errors.category = t('category') + ' is required';
     if (!formData.description.trim()) errors.description = t('description') + ' is required';
-    if (!formData.dosage.trim()) errors.dosage = t('dosageInstructions') + ' is required';
-
+    if (!formData.size.trim()) errors.size = t('size') + ' is required';
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -918,7 +890,7 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (validationErrors[name]) {
       setValidationErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -938,18 +910,14 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSaving(true);
-
     const filteredBenefits = formData.benefits.filter(benefit => benefit.trim() !== '');
     const filteredIngredients = formData.ingredients.filter(ingredient => ingredient.trim() !== '');
-
     const productData = {
       ...formData,
       benefits: filteredBenefits,
       ingredients: filteredIngredients
     };
-
     try {
       const productRef = doc(db, 'products', productData.id.toString());
       await setDoc(productRef, productData);
@@ -966,7 +934,7 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="flex border-b border-gray-200">
-          {['basic', 'details', 'medical'].map((tab) => (
+          {['basic', 'details'].map((tab) => (
             <button
               key={tab}
               type="button"
@@ -981,13 +949,11 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
             </button>
           ))}
         </div>
-
         {validationErrors.submit && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4">
             <p className="text-red-700">{validationErrors.submit}</p>
           </div>
         )}
-
         <div className="p-6">
           {activeTab === 'basic' && (
             <div className="space-y-6">
@@ -1058,15 +1024,14 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
               </div>
             </div>
           )}
-
           {activeTab === 'details' && (
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-4">
-                  {t('Benefits (up to 4)')}
+                  {t('Benefits (up to 10)')}
                 </label>
                 <div className="space-y-4">
-                  {[0, 1, 2, 3].map((index) => (
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
                     <div key={index}>
                       <input
                         type="text"
@@ -1080,21 +1045,21 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
                 </div>
               </div>
               <div>
-                <label htmlFor="dosage" className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('dosageInstructions')}
+                <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('size')}
                 </label>
                 <input
                   type="text"
-                  id="dosage"
-                  name="dosage"
-                  value={formData.dosage}
+                  id="size"
+                  name="size"
+                  value={formData.size}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition ${
-                    validationErrors.dosage ? 'border-red-500' : 'border-gray-300'
+                    validationErrors.size ? 'border-red-500' : 'border-gray-300'
                   }`}
                   required
                 />
-                {validationErrors.dosage && <p className="mt-1 text-sm text-red-600">{validationErrors.dosage}</p>}
+                {validationErrors.size && <p className="mt-1 text-sm text-red-600">{validationErrors.size}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-4">
@@ -1112,58 +1077,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
                       />
                     </div>
                   ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'medical' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label htmlFor="contraindications" className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('contraindications')}
-                  </label>
-                  <textarea
-                    id="contraindications"
-                    value={formData.medicalInfo.contraindications}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      medicalInfo: { ...prev.medicalInfo, contraindications: e.target.value }
-                    }))}
-                    className="w-full px-4 py-3 text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    rows="4"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="interactions" className="block text-sm  font-medium text-gray-700 mb-2">
-                    {t('interactions')}
-                  </label>
-                  <textarea
-                    id="interactions"
-                    value={formData.medicalInfo.interactions}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      medicalInfo: { ...prev.medicalInfo, interactions: e.target.value }
-                    }))}
-                    className="w-full px-4 py-3 border text-gray-700  border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    rows="4"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="storage" className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('storageInstructions')}
-                  </label>
-                  <textarea
-                    id="storage"
-                    value={formData.medicalInfo.storage}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      medicalInfo: { ...prev.medicalInfo, storage: e.target.value }
-                    }))}
-                    className="w-full px-4 py-3 border border-gray-300 text-gray-700  rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    rows="4"
-                  />
                 </div>
               </div>
             </div>
@@ -1196,7 +1109,7 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
   );
 };
 
-// About Image Text Editor Component
+// AboutImageTextEditor Component
 const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t }) => {
   const [formData, setFormData] = useState({
     image: aboutImage || '',
@@ -1214,7 +1127,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     if (!formData.title.trim()) errors.title = t('title') + ' is required';
     if (!formData.subtitle.trim()) errors.subtitle = t('subtitle') + ' is required';
     if (!formData.description.trim()) errors.description = t('description') + ' is required';
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -1224,7 +1136,7 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     setFormData(prev => ({ ...prev, [name]: value }));
     if (validationErrors[name]) {
       setValidationErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -1234,17 +1146,14 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
-
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
-
       const options = {
         maxSizeMB: 5,
         maxWidthOrHeight: 2048,
@@ -1252,7 +1161,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
         maxIteration: 20,
         initialQuality: 0.8,
       };
-
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -1271,7 +1179,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSaving(true);
     try {
       const docRef = doc(db, 'about', 'imageText');
@@ -1310,18 +1217,15 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
               </svg>
             </button>
           </div>
-
           {validationErrors.submit && (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded-md">
               <p className="text-red-700">{validationErrors.submit}</p>
             </div>
           )}
         </div>
-
         <div className="p-6 overflow-y-auto flex-1">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-6">
-              {/* Image Upload Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">{t('Image')}</h3>
                 <div className="space-y-2">
@@ -1336,12 +1240,11 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                     ) : (
                       <div className="flex items-center justify-center w-full h-full">
                         <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 16l4.586-4.586a2 2 0 002.828 0L16 16m-2-2l1.586-1.586a2 2 0 002.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                     )}
                   </div>
-
                   <div className="flex items-center gap-4">
                     <label className="flex-1">
                       <div className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition text-center cursor-pointer">
@@ -1356,7 +1259,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                       </div>
                     </label>
                   </div>
-
                   {isLoading && <LoadingSpinner />}
                   {uploadStatus.message && (
                     <div className={`p-3 rounded-md ${uploadStatus.isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
@@ -1365,8 +1267,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                   )}
                 </div>
               </div>
-
-              {/* Text Fields Section */}
               <div className="space-y-6">
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -1385,7 +1285,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                   />
                   {validationErrors.title && <p className="mt-1 text-sm text-red-600">{validationErrors.title}</p>}
                 </div>
-
                 <div>
                   <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-2">
                     {t('subtitle')}
@@ -1403,7 +1302,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                   />
                   {validationErrors.subtitle && <p className="mt-1 text-sm text-red-600">{validationErrors.subtitle}</p>}
                 </div>
-
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                     {t('description')}
@@ -1423,7 +1321,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
                 </div>
               </div>
             </div>
-
             <div className="flex justify-end p-6 bg-gray-50 border-t border-gray-200 sticky bottom-0">
               <button
                 type="button"
@@ -1452,8 +1349,8 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     </div>
   );
 };
-// Contact Options Component
-// ContactOptions Component for Next.js 15.3.1
+
+// ContactOptions Component
 const ContactOptions = ({ t }) => {
   const [activeTab, setActiveTab] = useState('whatsapp');
 
@@ -1468,7 +1365,6 @@ const ContactOptions = ({ t }) => {
     const email = t('emailAddress');
     const subject = encodeURIComponent(t('emailSubject'));
     const body = encodeURIComponent(t('emailBody'));
-
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       window.location.href = `googlegmail:///co?subject=${subject}&body=${body}&to=${email}`;
     } else {
@@ -1484,7 +1380,6 @@ const ContactOptions = ({ t }) => {
       <div className="p-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">{t('Contact Options')}</h3>
         <p className="text-gray-600 mb-8 text-center">{t('Choose your preferred way to contact us')}</p>
-
         <div className="flex justify-center mb-6">
           <div className="inline-flex rounded-full bg-gray-100 p-1">
             <button
@@ -1523,7 +1418,6 @@ const ContactOptions = ({ t }) => {
             </button>
           </div>
         </div>
-
         <AnimatePresence mode="wait">
           {activeTab === 'whatsapp' && (
             <motion.div
@@ -1579,7 +1473,6 @@ const ContactOptions = ({ t }) => {
               </motion.button>
             </motion.div>
           )}
-
           {activeTab === 'email' && (
             <motion.div
               key="email"
@@ -1639,6 +1532,7 @@ const ContactOptions = ({ t }) => {
     </div>
   );
 };
+
 // Main Component
 export default function Home() {
   const [activeTab, setActiveTab] = useState('all');
@@ -1665,14 +1559,11 @@ export default function Home() {
     image: '/about-lab.jpg'
   });
 
-  // Set up real-time listeners for products and categories
   useEffect(() => {
     const authState = localStorage.getItem('isAuthenticated') === 'true';
     setIsAdmin(authState);
-
     const fetchInitialData = async () => {
       try {
-        // Fetch products
         const productsQuery = query(collection(db, 'products'));
         const productsSnapshot = await getDocs(productsQuery);
         const productsData = productsSnapshot.docs.map(doc => ({
@@ -1681,13 +1572,11 @@ export default function Home() {
         }));
         setProducts(productsData);
 
-        // Fetch categories
         const categoriesQuery = query(collection(db, 'categories'));
         const categoriesSnapshot = await getDocs(categoriesQuery);
         const categoriesData = categoriesSnapshot.docs.map(doc => doc.data().name);
         setCategories(categoriesData);
 
-        // Fetch about text
         const aboutDocRef = doc(db, 'about', 'imageText');
         const aboutDocSnap = await getDoc(aboutDocRef);
         if (aboutDocSnap.exists()) {
@@ -1699,10 +1588,8 @@ export default function Home() {
         setIsLoading(false);
       }
     };
-
     fetchInitialData();
 
-    // Set up real-time listeners after initial load
     const unsubscribeProducts = onSnapshot(collection(db, 'products'), (querySnapshot) => {
       const productsData = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -1777,17 +1664,14 @@ export default function Home() {
     e.preventDefault();
     const newCategoryInput = document.getElementById('newCategory');
     const newCategory = newCategoryInput.value.trim();
-
     if (!newCategory) {
       alert('Please enter a category name');
       return;
     }
-
     if (categories.includes(newCategory.toLowerCase())) {
       alert('This category already exists');
       return;
     }
-
     try {
       await addDoc(collection(db, 'categories'), { name: newCategory.toLowerCase() });
       newCategoryInput.value = '';
@@ -1836,10 +1720,8 @@ export default function Home() {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
-
       const sections = ['home', 'products', 'about', 'science', 'contact'];
       let currentSection = 'home';
-
       sections.forEach(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -1849,10 +1731,8 @@ export default function Home() {
           }
         }
       });
-
       setActiveSection(currentSection);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -1884,7 +1764,6 @@ export default function Home() {
               <link rel="icon" href="/favicon.ico" />
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </Head>
-
             <motion.header
               initial={{ y: -100 }}
               animate={{ y: 0 }}
@@ -2144,14 +2023,12 @@ export default function Home() {
                 )}
               </AnimatePresence>
             </motion.header>
-
             <AdminLoginModal
               isOpen={showAdminLogin}
               onClose={() => setShowAdminLogin(false)}
               onLogin={handleLogin}
               t={t}
             />
-
             <section id="home" className="relative pt-28 pb-20 md:pt-36 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -2212,7 +2089,6 @@ export default function Home() {
                 </div>
               </div>
             </section>
-
             <section id="products" className="py-20 bg-gray-50">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-16">
@@ -2368,7 +2244,6 @@ export default function Home() {
                 )}
               </div>
             </section>
-
             {isAdmin && (
               <section className="py-20 bg-white">
                 <div className="container mx-auto px-4 md:px-6">
@@ -2414,141 +2289,135 @@ export default function Home() {
                 </div>
               </section>
             )}
-
             <section id="about" className="py-20 bg-white">
-  <div className="container mx-auto px-4 md:px-6">
-    <div className="flex flex-col lg:flex-row items-center gap-12">
-      <div className="lg:w-1/2">
-        <FadeInWhenVisible>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            {t('aboutTitle')}
-          </h2>
-        </FadeInWhenVisible>
-        <FadeInWhenVisible delay={0.1}>
-          <p className="text-lg text-gray-600 mb-6">
-            {t('aboutDescription')}
-          </p>
-        </FadeInWhenVisible>
-        <FadeInWhenVisible delay={0.2}>
-          <p className="text-lg text-gray-600 mb-8">
-            {t('aboutDescription2')}
-          </p>
-        </FadeInWhenVisible>
-        <FadeInWhenVisible delay={0.3}>
-          <div className="space-y-4">
-            {[
-              t('Rigorous quality control at every production stage'),
-              t('Clinically proven ingredients at effective dosages'),
-              t('Transparent sourcing and manufacturing processes'),
-              t('Trusted by healthcare professionals worldwide')
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="flex items-start"
-              >
-                <div className="flex-shrink-0 bg-blue-100 rounded-full p-2 mr-4 mt-1">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+              <div className="container mx-auto px-4 md:px-6">
+                <div className="flex flex-col lg:flex-row items-center gap-12">
+                  <div className="lg:w-1/2">
+                    <FadeInWhenVisible>
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        {t('aboutTitle')}
+                      </h2>
+                    </FadeInWhenVisible>
+                    <FadeInWhenVisible delay={0.1}>
+                      <p className="text-lg text-gray-600 mb-6">
+                        {t('aboutDescription')}
+                      </p>
+                    </FadeInWhenVisible>
+                    <FadeInWhenVisible delay={0.2}>
+                      <p className="text-lg text-gray-600 mb-8">
+                        {t('aboutDescription2')}
+                      </p>
+                    </FadeInWhenVisible>
+                    <FadeInWhenVisible delay={0.3}>
+                      <div className="space-y-4">
+                        {[
+                          t('Rigorous quality control at every production stage'),
+                          t('Clinically proven ingredients at effective dosages'),
+                          t('Transparent sourcing and manufacturing processes'),
+                          t('Trusted by healthcare professionals worldwide')
+                        ].map((item, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            viewport={{ once: true }}
+                            className="flex items-start"
+                          >
+                            <div className="flex-shrink-0 bg-blue-100 rounded-full p-2 mr-4 mt-1">
+                              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <p className="text-gray-700">{item}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </FadeInWhenVisible>
+                  </div>
+                  <div className="lg:w-1/2 w-full">
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      viewport={{ once: true }}
+                      className="relative w-full h-96 rounded-xl overflow-hidden shadow-xl"
+                    >
+                      <div className="lg:hidden relative w-full h-full">
+                        <Image
+                          src={aboutImageText.image || '/logo.jpg'}
+                          alt={t('About Us Image')}
+                          fill
+                          className="object-cover"
+                          priority
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.3 }}
+                          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+                        ></motion.div>
+                        <motion.div
+                          initial={{ y: 50, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.5, duration: 0.5 }}
+                          className="absolute bottom-0 left-0 right-0 p-6 text-white"
+                        >
+                          <h3 className="text-xl font-semibold mb-2">{aboutImageText.title}</h3>
+                          <p className="text-lg">{aboutImageText.subtitle}</p>
+                          <p className="text-sm mt-4">{aboutImageText.description}</p>
+                        </motion.div>
+                      </div>
+                      <div className="hidden lg:block relative w-full h-full">
+                        <Image
+                          src={aboutImageText.image || '/logo.jpg'}
+                          alt={t('About Us Image')}
+                          fill
+                          className="object-cover"
+                          priority
+                          sizes="50vw"
+                        />
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.3 }}
+                          className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+                        ></motion.div>
+                        <motion.div
+                          initial={{ y: 50, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.5, duration: 0.5 }}
+                          className="absolute bottom-0 left-0 right-0 p-6 text-white"
+                        >
+                          <h3 className="text-2xl font-semibold mb-2">{aboutImageText.title}</h3>
+                          <p className="text-lg">{aboutImageText.subtitle}</p>
+                          <p className="text-sm mt-4">{aboutImageText.description}</p>
+                        </motion.div>
+                      </div>
+                      {isAdmin && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.7 }}
+                          className="absolute top-4 right-4"
+                        >
+                          <button
+                            onClick={() => setEditingAboutText(true)}
+                            className="px-3 py-1 text-xs rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all flex items-center"
+                          >
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            {t('edit')}
+                          </button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  </div>
                 </div>
-                <p className="text-gray-700">{item}</p>
-              </motion.div>
-            ))}
-          </div>
-        </FadeInWhenVisible>
-      </div>
-      <div className="lg:w-1/2 w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true }}
-          className="relative w-full h-96 rounded-xl overflow-hidden shadow-xl"
-        >
-          {/* Mobile image container */}
-          <div className="lg:hidden relative w-full h-full">
-            <Image
-              src={aboutImageText.image || '/logo.jpg'}
-              alt={t('About Us Image')}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
-            ></motion.div>
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute bottom-0 left-0 right-0 p-6 text-white"
-            >
-              <h3 className="text-xl font-semibold mb-2">{aboutImageText.title}</h3>
-              <p className="text-lg">{aboutImageText.subtitle}</p>
-              <p className="text-sm mt-4">{aboutImageText.description}</p>
-            </motion.div>
-          </div>
-
-          {/* Desktop image container */}
-          <div className="hidden lg:block relative w-full h-full">
-            <Image
-              src={aboutImageText.image || '/logo.jpg'}
-              alt={t('About Us Image')}
-              fill
-              className="object-cover"
-              priority
-              sizes="50vw"
-            />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
-            ></motion.div>
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute bottom-0 left-0 right-0 p-6 text-white"
-            >
-              <h3 className="text-2xl font-semibold mb-2">{aboutImageText.title}</h3>
-              <p className="text-lg">{aboutImageText.subtitle}</p>
-              <p className="text-sm mt-4">{aboutImageText.description}</p>
-            </motion.div>
-          </div>
-
-          {isAdmin && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="absolute top-4 right-4"
-            >
-              <button
-                onClick={() => setEditingAboutText(true)}
-                className="px-3 py-1 text-xs rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all flex items-center"
-              >
-                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-                {t('edit')}
-              </button>
-            </motion.div>
-          )}
-        </motion.div>
-      </div>
-    </div>
-  </div>
-</section>
-
+              </div>
+            </section>
             <section id="science" className="py-20 bg-gray-50">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-16">
@@ -2609,7 +2478,6 @@ export default function Home() {
                 </div>
               </div>
             </section>
-
             <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
               <div className="container mx-auto px-4 md:px-6 text-center">
                 <FadeInWhenVisible>
@@ -2650,7 +2518,6 @@ export default function Home() {
                 </FadeInWhenVisible>
               </div>
             </section>
-
             <section id="contact" className="py-20 bg-white">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-16">
@@ -2665,12 +2532,10 @@ export default function Home() {
                     </p>
                   </FadeInWhenVisible>
                 </div>
-
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                   <div className="lg:order-2">
                     <ContactOptions t={t} />
                   </div>
-
                   <div className="lg:order-1">
                     <FadeInWhenVisible>
                       <h3 className="text-xl font-bold text-gray-900 mb-6 text-center lg:text-left">
@@ -2683,24 +2548,23 @@ export default function Home() {
                       </p>
                     </FadeInWhenVisible>
                     <FadeInWhenVisible delay={0.2}>
-                    <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
-                      <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d993.2819834780371!2d45.447408248217236!3d35.55673195195493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2siq!4v1750359654725!5m2!1sen!2siq"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0, borderRadius: '0.75rem' }}
-                        allowFullScreen=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        className="rounded-xl"
-                      ></iframe>
-                    </div>
+                      <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
+                        <iframe
+                          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d993.2819834780371!2d45.447408248217236!3d35.55673195195493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2siq!4v1750359654725!5m2!1sen!2siq"
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0, borderRadius: '0.75rem' }}
+                          allowFullScreen=""
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          className="rounded-xl"
+                        ></iframe>
+                      </div>
                     </FadeInWhenVisible>
                   </div>
                 </div>
               </div>
             </section>
-
             <footer className="bg-gray-900 text-white pt-16 pb-8">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -2741,7 +2605,7 @@ export default function Home() {
                                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764 1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                               )}
                               {item.icon === "instagram" && (
-                                <path d="M12.315 1.5a3.5 3.5 0 00-4.63 0 3.5 3.5 0 003.5 3.5 3.5 3.5 0 003.5-3.5 3.5 3.5 0 00-3.5-3.5zm7 7a7 7 0 00-7-7 7 7 0 00-7 7 7 7 0 007 7zm-7 10a7 7 0 007-7 7 7 0 00-7-7 7 7 0 00-7 7 7 7 0 007 7zm7-13.5a3.5 3.5 0 10-7 0 3.5 3.5 0 107 0z" />
+                                <path d="M12.315 1.5a3.5 3.5 0 00-4.63 0 3.5 3.5 0 003.5 3.5 3.5 3.5 0 003.5-3.5 3.5 3.5 0 00-3.5-3.5zm7 7a7 7 0 00-7-7 7 7 0 00-7 7 7 7 0 007 7zm7-13.5a3.5 3.5 0 10-7 0 3.5 3.5 0 107 0z" />
                               )}
                             </svg>
                           </motion.a>
@@ -2851,7 +2715,6 @@ export default function Home() {
                 </div>
               </div>
             </footer>
-
             <AnimatePresence>
               {editingProduct !== null && (
                 <motion.div
@@ -2880,7 +2743,6 @@ export default function Home() {
                 </motion.div>
               )}
             </AnimatePresence>
-
             <AnimatePresence>
               {editingAboutText && (
                 <motion.div
@@ -2909,7 +2771,6 @@ export default function Home() {
                 </motion.div>
               )}
             </AnimatePresence>
-
             <AnimatePresence>
               {isModalOpen && selectedProduct && (
                 <motion.div
@@ -2953,12 +2814,10 @@ export default function Home() {
                             </svg>
                           </motion.button>
                         </div>
-
                         <div className="mb-6">
                           <h3 className="font-semibold text-lg text-gray-800 mb-2">{t('description')}</h3>
                           <p className="text-gray-600">{selectedProduct.description}</p>
                         </div>
-
                         <div className="mb-6">
                           <h3 className="font-semibold text-lg text-gray-800 mb-3">{t('keyBenefits')}</h3>
                           <ul className="space-y-2">
@@ -2972,12 +2831,10 @@ export default function Home() {
                             ))}
                           </ul>
                         </div>
-
                         <div className="mb-6">
-                          <h3 className="font-semibold text-lg text-gray-800 mb-2">{t('dosage')}</h3>
-                          <p className="text-gray-700 font-medium">{selectedProduct.dosage}</p>
+                          <h3 className="font-semibold text-lg text-gray-800 mb-2">{t('size')}</h3>
+                          <p className="text-gray-700 font-medium">{selectedProduct.size}</p>
                         </div>
-
                         <div className="mb-6">
                           <h3 className="font-semibold text-lg text-gray-800 mb-3">{t('activeIngredients')}</h3>
                           <div className="bg-gray-50 rounded-lg p-4">
@@ -2989,21 +2846,6 @@ export default function Home() {
                                 </li>
                               ))}
                             </ul>
-                          </div>
-                        </div>
-
-                        <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="bg-red-50 p-3 rounded-lg">
-                            <h4 className="font-medium text-red-800 mb-1">{t('contraindications')}</h4>
-                            <p className="text-red-700 text-sm">{selectedProduct.medicalInfo && selectedProduct.medicalInfo.contraindications}</p>
-                          </div>
-                          <div className="bg-yellow-50 p-3 rounded-lg">
-                            <h4 className="font-medium text-yellow-800 mb-1">{t('interactions')}</h4>
-                            <p className="text-yellow-700 text-sm">{selectedProduct.medicalInfo && selectedProduct.medicalInfo.interactions}</p>
-                          </div>
-                          <div className="bg-green-50 p-3 rounded-lg">
-                            <h4 className="font-medium text-green-800 mb-1">{t('storageInstructions')}</h4>
-                            <p className="text-green-700 text-sm">{selectedProduct.medicalInfo && selectedProduct.medicalInfo.storage}</p>
                           </div>
                         </div>
                       </div>
