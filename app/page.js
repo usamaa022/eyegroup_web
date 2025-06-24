@@ -151,7 +151,7 @@ const translations = {
     lastNamePlaceholder: "Your last name",
     emailPlaceholder: "your.email@example.com",
     subjectPlaceholder: "Select a subject",
-    callUsContent: ["+964 (770) 123-4567", "Sat-Thu, 9am-5pm"],
+    callUsContent: ["+964 (776) 686-3061", "Sat-Thu, 9am-5pm"],
     emailUsContent: ["Sardeliparis@outlook.com", "Typically respond within 24 hours"],
     visitUsContent: [
       "123 Main Street, City, Country",
@@ -305,7 +305,7 @@ const translations = {
     lastNamePlaceholder: "Votre nom de famille",
     emailPlaceholder: "votre.email@example.com",
     subjectPlaceholder: "Sélectionnez un sujet",
-    callUsContent: ["+964 (770) 123-4567", "Sam-Dim, 9h-17h"],
+    callUsContent: ["+964 (776) 686-3061", "Sam-Dim, 9h-17h"],
     emailUsContent: ["Sardeliparis@outlook.com", "Réponse généralement sous 24 heures"],
     visitUsContent: [
       "123 Rue Principale, Ville, Pays",
@@ -459,7 +459,7 @@ const translations = {
     lastNamePlaceholder: "اسم العائل",
     emailPlaceholder: "بريدك الإلكتروني",
     subjectPlaceholder: "اختر موضوعًا",
-    callUsContent: ["+964 (770) 123-4567", "السبت - الخميس، 9 صباحًا - 5 مساءً"],
+    callUsContent: ["+964 (776) 686-3061", "السبت - الخميس، 9 صباحًا - 5 مساءً"],
     emailUsContent: ["Sardeliparis@outlook.com", "عادة ما يتم الرد خلال 24 ساعة"],
     visitUsContent: [
       "123 شارع رئيسي، مدينة، بلد",
