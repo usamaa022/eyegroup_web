@@ -1792,14 +1792,14 @@ export default function Home() {
               <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                   <div className="lg:w-1/2 z-10">
-                    <motion.h1
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, ease: [0.17, 0.67, 0.12, 0.99] }}
-                      className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
-                    >
-                      {t('To Make You Look Beautiful')} <br className="md:hidden lg:hidden xl:hidden" /> <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{t('Look Beautiful')}</span>
-                    </motion.h1>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.17, 0.67, 0.12, 0.99] }}
+                    className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+                  >
+                    {t('To Make You')} <br /> <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{t('Look Beautiful')}</span>
+                  </motion.h1>
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -2095,84 +2095,85 @@ export default function Home() {
                     </FadeInWhenVisible>
                   </div>
                   <div className="lg:w-1/2 w-full">
-                    <motion.div
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                      viewport={{ once: true }}
-                      className="relative w-full h-[600px] rounded-xl overflow-hidden shadow-xl"
-                    >
-                      <div className="lg:hidden relative w-full h-full">
-                        <Image
-                          src={aboutImageText.image || '/logo.jpg'}
-                          alt={t('About Us Image')}
-                          fill
-                          className="object-cover"
-                          priority
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.3 }}
-                          className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
-                        ></motion.div>
-                        <motion.div
-                          initial={{ y: 50, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.5, duration: 0.5 }}
-                          className="absolute bottom-0 left-0 right-0 p-6 text-white"
-                        >
-                          <h3 className="text-xl font-semibold mb-2">{aboutImageText.title}</h3>
-                          <p className="text-lg">{aboutImageText.subtitle}</p>
-                          <p className="text-sm mt-4">{aboutImageText.description}</p>
-                        </motion.div>
-                      </div>
-                      <div className="hidden lg:block relative w-full h-full">
-                        <Image
-                          src={aboutImageText.image || '/logo.jpg'}
-                          alt={t('About Us Image')}
-                          fill
-                          className="object-cover"
-                          priority
-                          sizes="50vw"
-                        />
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.3 }}
-                          className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
-                        ></motion.div>
-                        <motion.div
-                          initial={{ y: 50, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.5, duration: 0.5 }}
-                          className="absolute bottom-0 left-0 right-0 p-6 text-white"
-                        >
-                          <h3 className="text-2xl font-semibold mb-2">{aboutImageText.title}</h3>
-                          <p className="text-lg">{aboutImageText.subtitle}</p>
-                          <p className="text-sm mt-4">{aboutImageText.description}</p>
-                        </motion.div>
-                      </div>
-                      {isAdmin && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.7 }}
-                          className="absolute top-4 right-4"
-                        >
-                          <button
-                            onClick={() => setEditingAboutText(true)}
-                            className="px-3 py-1 text-xs rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all flex items-center"
-                          >
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                            {t('edit')}
-                          </button>
-                        </motion.div>
-                      )}
-                    </motion.div>
+                  <motion.div
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  viewport={{ once: true }}
+  className="relative w-full h-[400px] rounded-xl overflow-hidden shadow-lg"
+>
+  <div className="lg:hidden relative w-full h-full">
+    <Image
+      src={aboutImageText.image || '/logo.jpg'}
+      alt={t('About Us Image')}
+      fill
+      className="object-cover"
+      priority
+      sizes="(max-width: 768px) 100vw, 50vw"
+    />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+    ></motion.div>
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.5, duration: 0.5 }}
+      className="absolute bottom-0 left-0 right-0 p-6 text-white"
+    >
+      <h3 className="text-xl font-semibold mb-2">{aboutImageText.title}</h3>
+      <p className="text-lg">{aboutImageText.subtitle}</p>
+      <p className="text-sm mt-4">{aboutImageText.description}</p>
+    </motion.div>
+  </div>
+  <div className="hidden lg:block relative w-full h-full">
+    <Image
+      src={aboutImageText.image || '/logo.jpg'}
+      alt={t('About Us Image')}
+      fill
+      className="object-cover"
+      priority
+      sizes="50vw"
+    />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+    ></motion.div>
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.5, duration: 0.5 }}
+      className="absolute bottom-0 left-0 right-0 p-6 text-white"
+    >
+      <h3 className="text-2xl font-semibold mb-2">{aboutImageText.title}</h3>
+      <p className="text-lg">{aboutImageText.subtitle}</p>
+      <p className="text-sm mt-4">{aboutImageText.description}</p>
+    </motion.div>
+  </div>
+  {isAdmin && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.7 }}
+      className="absolute top-4 right-4"
+    >
+      <button
+        onClick={() => setEditingAboutText(true)}
+        className="px-3 py-1 text-xs rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all flex items-center"
+      >
+        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 013.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+        {t('edit')}
+      </button>
+    </motion.div>
+  )}
+</motion.div>
+
                   </div>
                 </div>
               </div>
