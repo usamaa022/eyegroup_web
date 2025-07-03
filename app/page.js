@@ -1,7 +1,5 @@
 'use client';
 /* eslint-disable react/no-unescaped-entities */
-
-
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -86,8 +84,8 @@ const translations = {
     edit: "Edit",
     delete: "Delete",
     aboutTitle: "About Sardeli",
-    aboutDescription: "Founded with a mission to bring the highest quality medical supplements to the market, Sardeli partners with world-class manufacturers to import scientifically validated health products.",
-    aboutDescription2: "Our rigorous selection process ensures that every product in our portfolio meets stringent quality standards and delivers measurable health benefits.",
+    aboutDescription: "Sardeli is a French formulated dermocosmetics Laboratory specializing in the design and manufacture of cosmetic products with high added value, precision and innovation.",
+    aboutDescription2: "The goal of the Sardelli brand is to satisfy consumers with the experience of using high-quality and effective products.",
     qualityPromise: "Our Quality Promise",
     qualityPromiseSubtitle: "Every batch tested for purity and potency",
     qualityPromiseDescription: "Certified by international health authorities",
@@ -127,20 +125,19 @@ const translations = {
     tryAdjustingSearch: "Try adjusting your search or filters to find what you're looking for.",
     shopNow: "Shop Now",
     speakToExpert: "Speak to an Expert",
-    whatsappUs: "Contact Us",
     emailUs: "Email Us",
-    evidenceBasedFormulations: "Evidence-Based Formulations",
-    evidenceBasedDescription: "Each ingredient is selected based on peer-reviewed clinical studies demonstrating its effectiveness for the intended health benefit.",
-    qualityAssurance: "Quality Assurance",
-    qualityAssuranceDescription: "Rigorous testing for purity, potency, and absence of contaminants ensures you receive exactly what's on the label.",
+    evidenceBasedFormulations: "Premium quality, proven formulas",
+    evidenceBasedDescription: "Our cosmetics division has a library of proven formulations that we customize and develop while taking into account your specifications and your commercial promise.",
+    qualityAssurance: "Regulatory compliance",
+    qualityAssuranceDescription: "We adhere to strict rules for the control of human, technical and administrative factors, as well as for the control of hygiene and safety criteria.",
     optimalBioavailability: "Optimal Bioavailability",
-    optimalBioavailabilityDescription: "We use advanced delivery systems to enhance absorption and ensure your body can utilize the nutrients effectively.",
+    optimalBioavailabilityDescription: "We provide you with cosmetological advice at the cutting edge of the latest technologies and scientific discoveries.",
     clinicallyProven: "Clinically Proven",
     pharmaceuticalGrade: "Pharmaceutical Grade",
     gmpCertified: "GMP Certified",
     readyToExperience: "Ready to Experience the Sardeli Difference?",
-    joinThousands: "Join thousands of healthcare professionals who trust our premium supplements for their patients.",
-    footerDescription: "Premium medical supplements backed by science and trusted by healthcare professionals.",
+    joinThousands: "Join thousands of healthcare professionals who trust our dermocosmetic products.",
+    footerDescription: "Premium Dermocosmetic products backed by science and trusted by healthcare and professionals.",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     sitemap: "Sitemap",
@@ -158,10 +155,8 @@ const translations = {
     emailUsContent: ["Sardeliparis@outlook.com", "Typically respond within 24 hours"],
     visitUsContent: [
       "123 Main Street, City, Country",
-      <a key="google-maps-link-en" href="https://www.google.com/maps?q=123+Main+Street,+City,+Country" target="_blank" rel="noopener noreferrer">View on Google Maps</a>
+      <a key="google-maps-link-en" href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215323224397!2d-73.9878449241643!3d40.7484409713896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0x83e0c3b7d70b7e4f!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1630424920492!5m2!1sen!2sus" target="_blank" rel="noopener noreferrer">View on Google Maps</a>
     ],
-    whatsappNumber: "+9647701234567",
-    whatsappMessage: "Hello, I have a question about your products",
     emailAddress: "Sardeliparis@outlook.com",
     emailSubject: "Inquiry about your products",
     emailBody: "Hello, I have a question about your products",
@@ -174,10 +169,10 @@ const translations = {
     "Carefully formulated supplements targeting specific health needs with clinically proven ingredients.": "Carefully formulated supplements targeting specific health needs with clinically proven ingredients.",
     "Rigorous quality control at every production stage": "Rigorous quality control at every production stage",
     "Clinically proven ingredients at effective dosages": "Clinically proven ingredients at effective dosages",
-    "Transparent sourcing and manufacturing processes": "Transparent sourcing and manufacturing processes",
-    "Trusted by healthcare professionals worldwide": "Trusted by healthcare professionals worldwide",
+    "using the most up-to-date and unique specialized therapeutic formulas in this brand's products": "using the most up-to-date and unique specialized therapeutic formulas in this brand's products",
+    "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort.": "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort.",
     "The Science Behind Our Products": "The Science Behind Our Products",
-    "Our supplements are developed based on the latest scientific research and formulated by medical experts to ensure efficacy and safety.": "Our supplements are developed based on the latest scientific research and formulated by medical experts to ensure efficacy and safety.",
+    "teams of cosmetic creators have the experience and know-how to meet all the requirements of your daily care routine.": "teams of cosmetic creators have the experience and know-how to meet all the requirements of your daily care routine.",
     "company": "Company",
     "resources": "Resources",
     "qualityStandards": "Quality Standards",
@@ -220,11 +215,18 @@ const translations = {
     "Connect with us": "Connect with us",
     "Send us a message": "Send us a message",
     "Contact Options": "Contact Options",
-    "Choose your preferred way to contact us": "Choose your preferred way to contact us",
+    "contact us": "contact us",
     "Message sent successfully!": "Message sent successfully!",
     "Failed to send message. Please try again later.": "Failed to send message. Please try again later.",
     "Our Location": "Our Location",
-    "Find us on the map": "Find us on the map"
+    "Find us on the map 2 Rue Pierre Josse, 91070 Bondoufle, France": "Find us on the map",
+    "To Make You Look Beautiful": "To Make You Look Beautiful",
+    "Look Beautiful": "Look Beautiful",
+    "Designed for you, Your beauty beings with care. With professional French formulations and restorative ingredients, Sardeli products protect your skin and also give you lasting freshness and radiance.": "Designed for you, Your beauty beings with care. With professional French formulations and restorative ingredients, Sardeli products protect your skin and also give you lasting freshness and radiance.",
+    "guaranteeing the use of world-class ingredients in product compositions": "Guaranteeing the use of world-class ingredients in product compositions",
+    "collaborating with specialized skin laboratories in France": "Collaborating with specialized skin laboratories in France",
+    "using the most up-to-date and unique specialized therapeutic formulas in this brand's products": "Using the most up-to-date and unique specialized therapeutic formulas in this brand's products",
+    "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort.": "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort."
   },
   fr: {
     home: "Accueil",
@@ -240,8 +242,8 @@ const translations = {
     edit: "Modifier",
     delete: "Supprimer",
     aboutTitle: "À Propos de Sardeli",
-    aboutDescription: "Fondée avec pour mission d'apporter les compléments médicaux de la plus haute qualité sur le marché, Sardeli s'associe à des fabricants de classe mondiale pour importer des produits de santé scientifiquement validés.",
-    aboutDescription2: "Notre processus de sélection rigoureux garantit que chaque produit de notre portefeuille répond à des normes de qualité strictes et offre des avantages mesurables pour la santé.",
+    aboutDescription: "Sardeli est un laboratoire de dermocosmétique français spécialisé dans la conception et la fabrication de produits cosmétiques à haute valeur ajoutée, de précision et d'innovation.",
+    aboutDescription2: "L'objectif de la marque Sardelli est de satisfaire les consommateurs avec l'expérience de l'utilisation de produits de haute qualité et efficaces.",
     qualityPromise: "Notre Promesse de Qualité",
     qualityPromiseSubtitle: "Chaque lot testé pour la pureté et la puissance",
     qualityPromiseDescription: "Certifié par les autorités sanitaires internationales",
@@ -281,20 +283,19 @@ const translations = {
     tryAdjustingSearch: "Essayez d'ajuster votre recherche ou vos filtres pour trouver ce que vous cherchez.",
     shopNow: "Acheter Maintenant",
     speakToExpert: "Parlez à un Expert",
-    whatsappUs: "Contactez-nous",
     emailUs: "Envoyez-nous un email",
-    evidenceBasedFormulations: "Formulations Basées sur des Preuves",
-    evidenceBasedDescription: "Chaque ingrédient est sélectionné sur la base d'études cliniques évaluées par des pairs démontrant son efficacité pour le bénéfice de santé prévu.",
-    qualityAssurance: "Assurance Qualité",
-    qualityAssuranceDescription: "Des tests rigoureux pour la pureté, la puissance, et l'absence de contaminants garantissent que vous recevez exactement ce qui est indiqué sur l'étiquette.",
-    optimalBioavailability: "Biodisponibilité Optimale",
-    optimalBioavailabilityDescription: "Nous utilisons des systèmes de livraison avancés pour améliorer l'absorption et garantir que votre corps puisse utiliser les nutriments efficacement.",
-    clinicallyProven: "Cliniquement Prouvé",
-    pharmaceuticalGrade: "Qualité Pharmaceutique",
+    evidenceBasedFormulations: "Formulations de qualité premium, formules éprouvées",
+    evidenceBasedDescription: "Notre division cosmétique possède une bibliothèque de formulations éprouvées que nous personnalisons et développons en tenant compte de vos spécifications et de votre promesse commerciale.",
+    qualityAssurance: "Conformité réglementaire",
+    qualityAssuranceDescription: "Nous adhérons à des règles strictes pour le contrôle des facteurs humains, techniques et administratifs, ainsi que pour le contrôle des critères d'hygiène et de sécurité.",
+    optimalBioavailability: "Biodisponibilité optimale",
+    optimalBioavailabilityDescription: "Nous vous fournissons des conseils cosmétologiques à la pointe des dernières technologies et découvertes scientifiques.",
+    clinicallyProven: "Cliniquement prouvé",
+    pharmaceuticalGrade: "Qualité pharmaceutique",
     gmpCertified: "Certifié BPF",
-    readyToExperience: "Prêt à Découvrir la Différence Sardeli ?",
-    joinThousands: "Rejoignez des milliers de professionnels de la santé qui font confiance à nos compléments premium pour leurs patients.",
-    footerDescription: "Compléments médicaux premium soutenus par la science et dignes de confiance des professionnels de la santé.",
+    readyToExperience: "Prêt à découvrir la différence Sardeli ?",
+    joinThousands: "Rejoignez des milliers de professionnels de la santé qui font confiance à nos produits dermocosmétiques.",
+    footerDescription: "Produits dermocosmétiques premium soutenus par la science et dignes de confiance des professionnels de la santé.",
     privacyPolicy: "Politique de Confidentialité",
     termsOfService: "Conditions de Service",
     sitemap: "Plan du Site",
@@ -312,10 +313,8 @@ const translations = {
     emailUsContent: ["Sardeliparis@outlook.com", "Réponse généralement sous 24 heures"],
     visitUsContent: [
       "123 Rue Principale, Ville, Pays",
-      <a key="google-maps-link-fr" href="https://www.google.com/maps?q=123+Rue+Principale,+Ville,+Pays" target="_blank" rel="noopener noreferrer">Voir sur Google Maps</a>
+      <a key="google-maps-link-fr" href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215323224397!2d-73.9878449241643!3d40.7484409713896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0x83e0c3b7d70b7e4f!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1630424920492!5m2!1sen!2sus" target="_blank" rel="noopener noreferrer">Voir sur Google Maps</a>
     ],
-    whatsappNumber: "+9647701234567",
-    whatsappMessage: "Bonjour, j'ai une question sur vos produits",
     emailAddress: "Sardeliparis@outlook.com",
     emailSubject: "Question sur vos produits",
     emailBody: "Bonjour, j'ai une question sur vos produits",
@@ -328,10 +327,10 @@ const translations = {
     "Carefully formulated supplements targeting specific health needs with clinically proven ingredients.": "Compléments soigneusement formulés ciblant des besoins de santé spécifiques avec des ingrédients cliniquement prouvés.",
     "Rigorous quality control at every production stage": "Contrôle de qualité rigoureux à chaque étape de la production",
     "Clinically proven ingredients at effective dosages": "Ingrédients cliniquement prouvés à des dosages efficaces",
-    "Transparent sourcing and manufacturing processes": "Processus de sourcing et de fabrication transparents",
-    "Trusted by healthcare professionals worldwide": "Fait confiance par les professionnels de la santé du monde entier",
+    "using the most up-to-date and unique specialized therapeutic formulas in this brand's products": "en utilisant les formules thérapeutiques spécialisées les plus récentes et uniques dans les produits de cette marque",
+    "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort.": "Votre satisfaction quant à l'efficacité et la bonne sensation d'utilisation des produits de cette marque est notre plus grand effort.",
     "The Science Behind Our Products": "La Science Derrière Nos Produits",
-    "Our supplements are developed based on the latest scientific research and formulated by medical experts to ensure efficacy and safety.": "Nos compléments sont développés sur la base des dernières recherches scientifiques et formulés par des experts médicaux pour garantir leur efficacité et leur sécurité.",
+    "teams of cosmetic creators have the experience and know-how to meet all the requirements of your daily care routine.": "Nos équipes de créateurs de cosmétiques ont l'expérience et le savoir-faire pour répondre à toutes les exigences de votre routine de soins quotidiens.",
     "company": "Entreprise",
     "resources": "Ressources",
     "qualityStandards": "Normes de Qualité",
@@ -359,7 +358,7 @@ const translations = {
     "Image": "Image",
     "About Us Preview": "Aperçu À Propos",
     "Save Changes": "Sauvegarder les Modifications",
-    "Image size exceeds the maximum limit of 5MB": "La taille de l'image dépasse la limite maximale de 5MB",
+    "Image size exceeds the maximum limit of 5MB": "La taille de l'image dépasse la limite maximale de 5 Mo",
     "Error uploading image": "Erreur lors du téléchargement de l'image",
     "Image uploaded successfully": "Image téléchargée avec succès",
     "Error deleting image": "Erreur lors de la suppression de l'image",
@@ -374,165 +373,18 @@ const translations = {
     "Connect with us": "Connectez-vous avec nous",
     "Send us a message": "Envoyez-nous un message",
     "Contact Options": "Options de contact",
-    "Choose your preferred way to contact us": "Choisissez votre méthode de contact préférée",
+    "contact us": "Contactez-nous",
     "Message sent successfully!": "Message envoyé avec succès !",
     "Failed to send message. Please try again later.": "Échec de l'envoi du message. Veuillez réessayer plus tard.",
-    "Our Location": "Notre emplacement",
-    "Find us on the map": "Trouvez-nous sur la carte"
-  },
-  ar: {
-    home: "الرئيسية",
-    products: "المنتجات",
-    about: "عن الشركة",
-    science: "العلوم",
-    contact: "اتصل بنا",
-    login: "تسجيل الدخول للمدير",
-    logout: "تسجيل الخروج",
-    searchPlaceholder: "ابحث عن المنتجات حسب الاسم أو الوصف...",
-    allProducts: "كل المنتجات",
-    addNewProduct: "إضافة منتج جديد",
-    edit: "تعديل",
-    delete: "حذف",
-    aboutTitle: "عن Sardeli",
-    aboutDescription: "تأسست بهدف تقديم أفضل المكملات الطبية في السوق، تتعاون Sardeli مع مصنعين عالميين لاستيراد المنتجات الصحية المدعومة علمياً.",
-    aboutDescription2: "عملية الاختيار الدقيقة تضمن أن كل منتج في محفظتنا يلبي معايير الجودة الصارمة ويقدم فوائد صحية قابلة للقياس.",
-    qualityPromise: "وعدنا بالجودة",
-    qualityPromiseSubtitle: "كل دفعة تخضع للاختبار من حيث النقاء والفاعلية",
-    qualityPromiseDescription: "معتمد من السلطات الصحية الدولية",
-    contactTitle: "تواصل معنا",
-    contactDescription: "هل لديك أسئلة حول منتجاتنا أو تحتاج إلى توصيات؟ فريقنا من الخبراء الصحيين هنا لمساعدتك.",
-    callUs: "اتصل بنا",
-    emailUs: "راسلنا عبر البريد الإلكتروني",
-    visitUs: "زرنا",
-    firstName: "الاسم الأول",
-    lastName: "اسم العائلة",
-    email: "البريد الإلكتروني",
-    subject: "الموضوع",
-    message: "الرسالة",
-    sendMessage: "إرسال الرسالة",
-    productInquiry: "استفسار عن المنتج",
-    orderSupport: "دعم الطلبات",
-    medicalQuestions: "الأسئلة الطبية",
-    other: "آخر",
-    yourMessage: "رسالتك هنا...",
-    categoryManagement: "إدارة الفئات",
-    newCategory: "فئة جديدة",
-    addCategory: "إضافة فئة",
-    saveChanges: "حفظ التغييرات",
-    cancel: "إلغاء",
-    productName: "اسم المنتج",
-    category: "الفئة",
-    description: "الوصف",
-    size: "الحجم",
-    benefits: "الفوائد",
-    ingredients: "المكونات",
-    title: "العنوان",
-    subtitle: "العنوان الفرعي",
-    productDetails: "تفاصيل المنتج",
-    keyBenefits: "الفوائد الرئيسية",
-    activeIngredients: "المكونات الفعالة",
-    noProductsFound: "لم يتم العثور على منتجات",
-    tryAdjustingSearch: "حاول تعديل بحثك أو عوامل التصفية للعثور على ما تبحث عنه.",
-    shopNow: "تسوق الآن",
-    speakToExpert: "تحدث إلى خبير",
-    whatsappUs: "تواصل معنا",
-    emailUs: "راسلنا عبر البريد الإلكتروني",
-    evidenceBasedFormulations: "صيغ قائمة على الأدلة",
-    evidenceBasedDescription: "يتم اختيار كل مكون بناءً على دراسات سريرية مراجعة من قبل النظراء تثبت فعاليته للفائدة الصحية المقصودة.",
-    qualityAssurance: "ضمان الجودة",
-    qualityAssuranceDescription: "الاختبارات الصارمة للنقاء والفاعلية وغياب الملوثات تضمن حصولك على ما هو مكتوب على الملصق.",
-    optimalBioavailability: "التوافر البيولوجي الأمثل",
-    optimalBioavailabilityDescription: "نستخدم أنظمة توصيل متقدمة لتعزيز الامتصاص وضمان قدرة جسمك على استخدام العناصر الغذائية بفعالية.",
-    clinicallyProven: "مثبت سريريًا",
-    pharmaceuticalGrade: "جودة صيدلانية",
-    gmpCertified: "معتمد من قبل م.ع.ج",
-    readyToExperience: "هل أنت مستعد لتجربة الفرق مع Sardeli؟",
-    joinThousands: "انضم إلى آلاف المتخصصين في الرعاية الصحية الذين يثقون بمكملاتنا المتميزة لمرضاهم.",
-    footerDescription: "مكملات طبية متميزة مدعومة بالعلوم وموثوقة من قبل المتخصصين في الرعاية الصحية.",
-    privacyPolicy: "سياسة الخصوصية",
-    termsOfService: "شروط الخدمة",
-    sitemap: "خريطة الموقع",
-    copyright: "© {year} Sardeli. كل الحقوق محفوظة.",
-    productNamePlaceholder: "اسم المنتج",
-    descriptionPlaceholder: "الوصف",
-    sizePlaceholder: "الحجم",
-    benefitPlaceholder: "الفائدة {index}",
-    ingredientPlaceholder: "المكون {index}",
-    firstNamePlaceholder: "اسمك الأول",
-    lastNamePlaceholder: "اسم العائل",
-    emailPlaceholder: "بريدك الإلكتروني",
-    subjectPlaceholder: "اختر موضوعًا",
-    callUsContent: ["+964 (776) 686-3061", "السبت - الخميس، 9 صباحًا - 5 مساءً"],
-    emailUsContent: ["Sardeliparis@outlook.com", "عادة ما يتم الرد خلال 24 ساعة"],
-    visitUsContent: [
-      "123 شارع رئيسي، مدينة، بلد",
-      <a key="google-maps-link-ar" href="https://www.google.com/maps?q=123+شارع+رئيسي،+مدينة،+بلد" target="_blank" rel="noopener noreferrer">عرض على خرائط جوجل</a>
-    ],
-    whatsappNumber: "+9647701234567",
-    whatsappMessage: "مرحبا، لدي استفسار عن منتجاتكم",
-    emailAddress: "Sardeliparis@outlook.com",
-    emailSubject: "استفسار عن منتجاتكم",
-    emailBody: "مرحبا، لدي استفسار عن منتجاتكم",
-    "Premium Medical Supplements": "مكملات طبية متميزة",
-    "for Optimal Health": "لصحة مثلى",
-    "Explore Products": "استكشف المنتجات",
-    "Learn the Science": "تعرف على العلم",
-    "Scientifically formulated, clinically tested supplements imported with the highest quality standards to support your health journey.": "مكملات مصنوعة علمياً ومختبرة سريرياً مستوردة بأعلى معايير الجودة لدعم رحلتك الصحية.",
-    "Our Premium Supplement Range": "نطاق المكملات المتميزة لدينا",
-    "Carefully formulated supplements targeting specific health needs with clinically proven ingredients.": "مكملات مصنوعة بعناية تستهدف احتياجات صحية محددة مع مكونات مثبتة سريرياً.",
-    "Rigorous quality control at every production stage": "مراقبة جودة صارمة في كل مرحلة من مراحل الإنتاج",
-    "Clinically proven ingredients at effective dosages": "مكونات مثبتة سريرياً بجرعات فعالة",
-    "Transparent sourcing and manufacturing processes": "عمليات الحصول على المواد الخام والتصنيع الشفافة",
-    "Trusted by healthcare professionals worldwide": "موثوق بها من قبل المتخصصين في الرعاية الصحية في جميع أنحاء العالم",
-    "The Science Behind Our Products": "العلم وراء منتجاتنا",
-    "Our supplements are developed based on أحدث الأبحاث العلمية وصيغتها من قبل خبراء طبيين لضمان الفعالية والسلامة.": "تم تطوير مكملاتنا بناءً على أحدث الأبحاث العلمية وصيغتها من قبل خبراء طبيين لضمان الفعالية والسلامة.",
-    "company": "الشركة",
-    "resources": "الموارد",
-    "qualityStandards": "معايير الجودة",
-    "press": "الصحافة",
-    "careers": "الوظائف",
-    "blog": "المدونة",
-    "research": "البحوث",
-    "faq": "الأسئلة الشائعة",
-    "shippingReturns": "الشحن والإرجاع",
-    "contactUs": "اتصل بنا",
-    "View Details": "عرض التفاصيل",
-    "more": "المزيد",
-    "Edit": "تعديل",
-    "Delete": "حذف",
-    "Product Image": "صورة المنتج",
-    "Upload an image": "تحميل صورة",
-    "Basic Info": "المعلومات الأساسية",
-    "Details": "التفاصيل",
-    "Benefits (up to 10)": "الفوائد (حتى 10)",
-    "Benefit": "فائدة",
-    "Size": "الحجم",
-    "Ingredients (up to 10)": "المكونات (حتى 10)",
-    "Ingredient": "مكون",
-    "Save Product": "حفظ المنتج",
-    "Image": "صورة",
-    "About Us Preview": "معاينة عنا",
-    "Save Changes": "حفظ التغييرات",
-    "Image size exceeds the maximum limit of 5MB": "حجم الصورة يتجاوز الحد الأقصى البالغ 5MB",
-    "Error uploading image": "خطأ في تحميل الصورة",
-    "Image uploaded successfully": "تم تحميل الصورة بنجاح",
-    "Error deleting image": "خطأ في حذف الصورة",
-    "Image deleted successfully": "تم حذف الصورة بنجاح",
-    "Are you sure you want to delete this product?": "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
-    "Are you sure you want to delete this category? Products in this category will be unaffected.": "هل أنت متأكد أنك تريد حذف هذه الفئة؟ لن تتأثر المنتجات في هذه الفئة.",
-    "Invalid credentials": "بيانات الاعتماد غير صالحة",
-    "Password": "كلمة المرور",
-    "Click to upload": "انقر للتحميل",
-    "Location on Google Maps": "الموقع على خرائط جوجل",
-    "We typically respond within a few hours": "عادة ما نرد في غضون ساعات قليلة",
-    "Connect with us": "تواصل معنا",
-    "Send us a message": "أرسل لنا رسالة",
-    "Contact Options": "خيارات الاتصال",
-    "Choose your preferred way to contact us": "اختر الطريقة المفضلة للتواصل معنا",
-    "Message sent successfully!": "تم إرسال الرسالة بنجاح!",
-    "Failed to send message. Please try again later.": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى لاحقًا.",
-    "Our Location": "موقعنا",
-    "Find us on the map": "ابحث عنا على الخريطة"
+    "Our Location": "Notre Emplacement",
+    "Find us on the map 2 Rue Pierre Josse, 91070 Bondoufle, France": "Trouvez-nous sur la carte",
+    "To Make You Look Beautiful": "Pour Vous Rendre Beau",
+    "Look Beautiful": "Pour Vous Rendre Beau",
+    "Designed for you, Your beauty beings with care. With professional French formulations and restorative ingredients, Sardeli products protect your skin and also give you lasting freshness and radiance.": "Conçu pour vous, votre beauté commence avec soin. Avec des formulations françaises professionnelles et des ingrédients restaurateurs, les produits Sardeli protègent votre peau et vous offrent une fraîcheur et une radiance durables.",
+    "guaranteeing the use of world-class ingredients in product compositions": "Garantir l'utilisation d'ingrédients de classe mondiale dans les compositions de produits",
+    "collaborating with specialized skin laboratories in France": "Collaborer avec des laboratoires spécialisés dans les soins de la peau en France",
+    "using the most up-to-date and unique specialized therapeutic formulas in this brand's products": "Utiliser les formules thérapeutiques spécialisées les plus récentes et uniques dans les produits de cette marque",
+    "Your satisfaction with the effectiveness and good feeling of using this brand's products is our utmost effort.": "Votre satisfaction quant à l'efficacité et la bonne sensation d'utilisation des produits de cette marque est notre plus grand effort."
   }
 };
 
@@ -653,6 +505,7 @@ const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
   return (
     <motion.div
       ref={ref}
@@ -782,14 +635,17 @@ const ImageUpload = ({ image, onImageChange, t }) => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
+
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
+
       const options = {
         maxSizeMB: 5,
         maxWidthOrHeight: 2048,
@@ -797,6 +653,7 @@ const ImageUpload = ({ image, onImageChange, t }) => {
         maxIteration: 20,
         initialQuality: 0.8,
       };
+
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -874,7 +731,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     size: product?.size || '',
     ingredients: product?.ingredients || ['', '', '', '', '', '', '', '', '', ''],
   });
-
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -1117,8 +973,8 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const [formData, setFormData] = useState({
     image: aboutImage || '',
     title: aboutImageText?.title || 'Our Quality Promise',
-    subtitle: aboutImageText?.subtitle || 'Every batch tested for purity and potency',
-    description: aboutImageText?.description || 'Certified by international health authorities'
+    subtitle: aboutImageText?.subtitle || 'To ensure the design of finished products',
+    description: aboutImageText?.description || 'using the best dermocosmetic ingredients on the market.'
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -1149,14 +1005,17 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
+
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
+
       const options = {
         maxSizeMB: 5,
         maxWidthOrHeight: 2048,
@@ -1164,6 +1023,7 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
         maxIteration: 20,
         initialQuality: 0.8,
       };
+
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -1355,14 +1215,7 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
 
 // ContactOptions Component
 const ContactOptions = ({ t }) => {
-  const [activeTab, setActiveTab] = useState('whatsapp');
-
-  const handleWhatsAppClick = () => {
-    const phoneNumber = t('whatsappNumber').replace(/\D/g, '');
-    const encodedMessage = encodeURIComponent(t('whatsappMessage'));
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
-  };
+  const [activeTab, setActiveTab] = useState('email');
 
   const handleEmailClick = () => {
     const email = t('emailAddress');
@@ -1379,103 +1232,16 @@ const ContactOptions = ({ t }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden mt-15 border border-gray-200">
       <div className="p-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">{t('Contact Options')}</h3>
-        <p className="text-gray-600 mb-8 text-center">{t('Choose your preferred way to contact us')}</p>
+        <p className="text-gray-600 mb-8 text-center">{t('contact us')}</p>
         <div className="flex justify-center mb-6">
           <div className="inline-flex rounded-full bg-gray-100 p-1">
-            <button
-              onClick={() => setActiveTab('whatsapp')}
-              className={`px-6 py-2 rounded-full font-medium text-sm transition-all ${
-                activeTab === 'whatsapp' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <div className="flex items-center justify-center">
-                <Image
-                  src="/whatsapp_logo.png"
-                  alt="WhatsApp"
-                  width={30}
-                  height={30}
-                  className="mr-2"
-                />
-                WhatsApp
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab('email')}
-              className={`px-6 py-2 rounded-full font-medium text-sm transition-all ${
-                activeTab === 'email' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <div className="flex items-center justify-center">
-                <Image
-                  src="/gmail_logo.png"
-                  alt="Gmail"
-                  width={30}
-                  height={30}
-                  className="mr-2"
-                />
-                Email
-              </div>
-            </button>
+            {/* Add your tabs here */}
           </div>
         </div>
         <AnimatePresence mode="wait">
-          {activeTab === 'whatsapp' && (
-            <motion.div
-              key="whatsapp"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="text-center"
-            >
-              <div className="w-24 h-24 mb-6 mx-auto relative">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 20 }}
-                  className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full blur opacity-75"
-                ></motion.div>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.3, type: 'spring', stiffness: 260, damping: 20 }}
-                  className="relative bg-white p-1 rounded-full"
-                >
-                  <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto">
-                    <Image
-                      src="/whatsapp_logo.png"
-                      alt="WhatsApp"
-                      width={100}
-                      height={100}
-                      className="object-contain"
-                    />
-                  </div>
-                </motion.div>
-              </div>
-              <h4 className="text-xl font-bold text-gray-900 mb-2">{t('Connect with us on WhatsApp')}</h4>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                {t('We typically respond within a few hours')}
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleWhatsAppClick}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-8 rounded-4xl transition-all duration-200 hover:shadow-lg flex items-center justify-center mx-auto"
-              >
-                <Image
-                  src="/whatsapp_logo_button.png"
-                  alt="WhatsApp"
-                  width={30}
-                  height={30}
-                  className="mr-2"
-                />
-                {t('Send us a message')}
-              </motion.button>
-            </motion.div>
-          )}
           {activeTab === 'email' && (
             <motion.div
               key="email"
@@ -1485,7 +1251,7 @@ const ContactOptions = ({ t }) => {
               transition={{ duration: 0.3 }}
               className="text-center"
             >
-              <div className="w-24 h-24 mb-6 mx-auto relative">
+              <div className="w-24 h-24 mb-4 mx-auto relative">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -1514,10 +1280,10 @@ const ContactOptions = ({ t }) => {
                 {t('We typically respond within 24 hours')}
               </p>
               <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleEmailClick}
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-2 px-7 rounded-4xl transition-all duration-200 hover:shadow-lg flex items-center justify-center mx-auto"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-8 rounded-full transition-all duration-200 hover:shadow-lg flex items-center justify-center mx-auto"
               >
                 <Image
                   src="/gmail_logo_button.png"
@@ -1565,6 +1331,7 @@ export default function Home() {
   useEffect(() => {
     const authState = localStorage.getItem('isAuthenticated') === 'true';
     setIsAdmin(authState);
+
     const fetchInitialData = async () => {
       try {
         const productsQuery = query(collection(db, 'products'));
@@ -1591,6 +1358,7 @@ export default function Home() {
         setIsLoading(false);
       }
     };
+
     fetchInitialData();
 
     const unsubscribeProducts = onSnapshot(collection(db, 'products'), (querySnapshot) => {
@@ -1781,7 +1549,13 @@ export default function Home() {
                   className="flex items-center"
                 >
                   <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    {t('Sardeli')}
+                    <Image
+                      src="/sardeli_logo.jpg"
+                      alt="Sardeli Logo"
+                      width={180}
+                      height={180}
+                      className="mr-2"
+                    />
                   </div>
                 </motion.div>
                 <nav className="hidden md:flex space-x-1 items-center">
@@ -1809,7 +1583,7 @@ export default function Home() {
                         'text-gray-700 hover:bg-gray-100'
                       }`}
                     >
-                      {language === 'en' ? 'English' : language === 'fr' ? 'Français' : 'العربية'}
+                      {language === 'en' ? 'English' : 'Français'}
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
@@ -1837,15 +1611,6 @@ export default function Home() {
                           className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Français
-                        </button>
-                        <button
-                          onClick={() => {
-                            setLanguage('ar');
-                            setShowLanguageDropdown(false);
-                          }}
-                          className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          العربية
                         </button>
                       </motion.div>
                     )}
@@ -1955,7 +1720,7 @@ export default function Home() {
                           whileTap={{ scale: 0.98 }}
                           className="px-4 py-3 rounded-md text-left font-medium text-gray-700 hover:bg-gray-100 w-full flex justify-between items-center"
                         >
-                          {language === 'en' ? 'English' : language === 'fr' ? 'Français' : 'العربية'}
+                          {language === 'en' ? 'English' : 'Français'}
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
@@ -1983,15 +1748,6 @@ export default function Home() {
                               className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                             >
                               Français
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLanguage('ar');
-                                setShowLanguageDropdown(false);
-                              }}
-                              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              العربية
                             </button>
                           </motion.div>
                         )}
@@ -2042,7 +1798,7 @@ export default function Home() {
                       transition={{ duration: 0.6, ease: [0.17, 0.67, 0.12, 0.99] }}
                       className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
                     >
-                      {t('Premium Medical Supplements')} <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{t('for Optimal Health')}</span>
+                      {t('To Make You Look Beautiful')} <br className="md:hidden lg:hidden xl:hidden" /> <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{t('Look Beautiful')}</span>
                     </motion.h1>
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
@@ -2050,7 +1806,7 @@ export default function Home() {
                       transition={{ duration: 0.6, delay: 0.2, ease: [0.17, 0.67, 0.12, 0.99] }}
                       className="text-lg md:text-xl text-gray-600 mb-8 max-w-lg"
                     >
-                      {t('Scientifically formulated, clinically tested supplements imported with the highest quality standards to support your health journey.')}
+                      {t('Designed for you, Your beauty beings with care. With professional French formulations and restorative ingredients, Sardeli products protect your skin and also give you lasting freshness and radiance.')}
                     </motion.p>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -2097,12 +1853,12 @@ export default function Home() {
                 <div className="text-center mb-16">
                   <FadeInWhenVisible>
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                      {t('Our Premium Supplement Range')}
+                      {t('Our Dermocosmetic product Range')}
                     </h2>
                   </FadeInWhenVisible>
                   <FadeInWhenVisible delay={0.1}>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                      {t('Carefully formulated supplements targeting specific health needs with clinically proven ingredients.')}
+                      {t('Glowing skin experience, Producing world-class quality products and ensuring consumer confidence in the originality of the product.')}
                     </p>
                   </FadeInWhenVisible>
                 </div>
@@ -2314,10 +2070,10 @@ export default function Home() {
                     <FadeInWhenVisible delay={0.3}>
                       <div className="space-y-4">
                         {[
-                          t('Rigorous quality control at every production stage'),
-                          t('Clinically proven ingredients at effective dosages'),
-                          t('Transparent sourcing and manufacturing processes'),
-                          t('Trusted by healthcare professionals worldwide')
+                          t('guaranteeing the use of world-class ingredients in product compositions'),
+                          t('collaborating with specialized skin laboratories in France'),
+                          t('using the most up-to-date and unique specialized therapeutic formulas in this brand\'s products'),
+                          t('Your satisfaction with the effectiveness and good feeling of using this brand\'s products is our utmost effort.')
                         ].map((item, index) => (
                           <motion.div
                             key={index}
@@ -2344,7 +2100,7 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
                       viewport={{ once: true }}
-                      className="relative w-full h-96 rounded-xl overflow-hidden shadow-xl"
+                      className="relative w-full h-[600px] rounded-xl overflow-hidden shadow-xl"
                     >
                       <div className="lg:hidden relative w-full h-full">
                         <Image
@@ -2421,66 +2177,6 @@ export default function Home() {
                 </div>
               </div>
             </section>
-            <section id="science" className="py-20 bg-gray-50">
-              <div className="container mx-auto px-4 md:px-6">
-                <div className="text-center mb-16">
-                  <FadeInWhenVisible>
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                      {t('The Science Behind Our Products')}
-                    </h2>
-                  </FadeInWhenVisible>
-                  <FadeInWhenVisible delay={0.1}>
-                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                      {t('Our supplements are developed based on the latest scientific research and formulated by medical experts to ensure efficacy and safety.')}
-                    </p>
-                  </FadeInWhenVisible>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                  {[
-                    {
-                      icon: (
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                      ),
-                      title: t('evidenceBasedFormulations'),
-                      description: t('evidenceBasedDescription')
-                    },
-                    {
-                      icon: (
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                      ),
-                      title: t('qualityAssurance'),
-                      description: t('qualityAssuranceDescription')
-                    },
-                    {
-                      icon: (
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      ),
-                      title: t('optimalBioavailability'),
-                      description: t('optimalBioavailabilityDescription')
-                    }
-                  ].map((item, index) => (
-                    <FadeInWhenVisible key={index} delay={index * 0.1}>
-                      <motion.div
-                        whileHover={{ y: -5, boxShadow: "0 10px 20px -5px rgba(59, 130, 246, 0.2)" }}
-                        className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-                      >
-                        <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
-                          {item.icon}
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{item.title}</h3>
-                        <p className="text-gray-600 text-center">{item.description}</p>
-                      </motion.div>
-                    </FadeInWhenVisible>
-                  ))}
-                </div>
-              </div>
-            </section>
             <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
               <div className="container mx-auto px-4 md:px-6 text-center">
                 <FadeInWhenVisible>
@@ -2547,13 +2243,13 @@ export default function Home() {
                     </FadeInWhenVisible>
                     <FadeInWhenVisible delay={0.1}>
                       <p className="text-gray-600 mb-4 text-center lg:text-left">
-                        {t('Find us on the map')}
+                        {t('Find us on the map 2 Rue Pierre Josse, 91070 Bondoufle, France')}
                       </p>
                     </FadeInWhenVisible>
                     <FadeInWhenVisible delay={0.2}>
                       <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg">
                         <iframe
-                          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d993.2819834780371!2d45.447408248217236!3d35.55673195195493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2siq!4v1750359654725!5m2!1sen!2siq"
+                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.99164856925!2d2.363721076456198!3d48.60216890000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5dc17b3189467%3A0xe755daeb13e6f5ed!2s2%20Rue%20Pierre%20Josse%2C%2091070%20Bondoufle%2C%20France!5e0!3m2!1sen!2sus!4v1630425000000!5m2!1sen!2sus"
                           width="100%"
                           height="100%"
                           style={{ border: 0, borderRadius: '0.75rem' }}
