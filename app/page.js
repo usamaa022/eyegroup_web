@@ -39,7 +39,7 @@ class ErrorBoundary extends React.Component {
               </svg>
               <h3 className="text-xl font-semibold text-red-800">Something went wrong</h3>
             </div>
-            <p className="text-gray-700 mb-4">We're sorry for the inconvenience. The application has encountered an error.</p>
+            <p className="text-gray-700 mb-4">We&apos;re sorry for the inconvenience. The application has encountered an error.</p>
             <div className="bg-gray-100 p-3 rounded text-sm text-gray-800 mb-4">
               <p><strong>Error:</strong> {this.state.error?.message}</p>
             </div>
