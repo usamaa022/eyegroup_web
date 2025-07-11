@@ -1,4 +1,3 @@
-// app/page.js
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -39,7 +38,7 @@ class ErrorBoundary extends React.Component {
               </svg>
               <h3 className="text-xl font-semibold text-red-800">Something went wrong</h3>
             </div>
-            <p className="text-gray-700 mb-4">We&apos;re sorry for the inconvenience. The application has encountered an error.</p>
+            <p className="text-gray-700 mb-4">We're sorry for the inconvenience. The application has encountered an error.</p>
             <div className="bg-gray-100 p-3 rounded text-sm text-gray-800 mb-4">
               <p><strong>Error:</strong> {this.state.error?.message}</p>
             </div>
@@ -63,6 +62,117 @@ const LoadingSpinner = () => (
     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
   </div>
 );
+
+// BeforeAfterSlider Component
+const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isDragging || !containerRef.current) return;
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
+    setSliderPosition(percentage);
+  }, [isDragging]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging || !containerRef.current) return;
+    const container = containerRef.current;
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0] || e.changedTouches[0];
+    const x = touch.clientX - rect.left;
+    const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
+    setSliderPosition(percentage);
+  }, [isDragging]);
+
+  const handleMouseDown = useCallback(() => setIsDragging(true), []);
+  const handleMouseUp = useCallback(() => setIsDragging(false), []);
+
+  useEffect(() => {
+    const handleMouseUpGlobal = () => setIsDragging(false);
+    if (isDragging) {
+      window.addEventListener('mouseup', handleMouseUpGlobal);
+      window.addEventListener('mousemove', handleMouseMove);
+    }
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUpGlobal);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [isDragging, handleMouseMove]);
+
+  useEffect(() => {
+    const preloadImages = [beforeImage, afterImage];
+    Promise.all(preloadImages.map(src => {
+      return new Promise((resolve) => {
+        const img = new window.Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    })).then(() => setIsLoaded(true));
+  }, [beforeImage, afterImage]);
+
+  if (!isLoaded) return <LoadingSpinner />;
+
+  return (
+    <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-full h-[450px]">
+        <div
+          ref={containerRef}
+          className="relative w-full h-full cursor-ew-resize touch-none select-none"
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchEnd={handleMouseUp}
+          onTouchMove={handleTouchMove}
+        >
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
+            <Image
+              src={beforeImage}
+              alt="Before treatment"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+            />
+          </div>
+          <div
+            className="absolute inset-0 w-full h-full overflow-hidden"
+            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+          >
+            <Image
+              src={afterImage}
+              alt="After treatment"
+              fill
+              className="object-cover my-1.5"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+            />
+          </div>
+          <div
+            className="absolute top-0 bottom-0 w-1 bg-blue-600 transform -translate-x-1/2"
+            style={{ left: `${sliderPosition}%` }}
+          >
+            <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border-4 border-white z-20">
+              <div className="w-6 h-0.5 bg-blue-600"></div>
+              <div className="absolute -inset-2 rounded-full border-2 border-blue-200 border-dashed"></div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute top-4 left-4 bg-white bg-opacity-90 px-4 py-2 rounded-full text-sm font-medium text-gray-800 shadow-lg">
+          Before
+        </div>
+        <div className="absolute top-4 right-4 bg-white bg-opacity-90 px-4 py-2 rounded-full text-sm font-medium text-gray-800 shadow-lg">
+          After
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Language translations
 const translations = {
@@ -150,7 +260,7 @@ const translations = {
     emailUsContent: ["info@sardeli.fr", "Typically respond within 24 hours"],
     visitUsContent: [
       "2 Rue Pierre Josse, 91070 Bondoufle, France",
-      <a key="google-maps-link-en" href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215323224397!2d-73.9878449241643!3d40.7484409713896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0x83e0c3b7d70b7e4f!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1630424920492!5m2!1sen!2sus" target="_blank" rel="noopener noreferrer">View on Google Maps</a>
+      <a key="google-maps-link-en" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">View on Google Maps</a>
     ],
     emailAddress: "info@sardeli.fr",
     emailSubject: "Inquiry about your products",
@@ -307,7 +417,7 @@ const translations = {
     emailUsContent: ["info@sardeli.fr", "Réponse généralement sous 24 heures"],
     visitUsContent: [
       "2 Rue Pierre Josse, 91070 Bondoufle, France",
-      <a key="google-maps-link-fr" href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215323224397!2d-73.9878449241643!3d40.7484409713896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0x83e0c3b7d70b7e4f!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1630424920492!5m2!1sen!2sus" target="_blank" rel="noopener noreferrer">Voir sur Google Maps</a>
+      <a key="google-maps-link-fr" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Voir sur Google Maps</a>
     ],
     emailAddress: "info@sardeli.fr",
     emailSubject: "Question sur vos produits",
@@ -382,116 +492,122 @@ const translations = {
   }
 };
 
-// BeforeAfterSlider Component
-const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
-  const containerRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  const handleMouseMove = useCallback((e) => {
-    if (!isDragging || !containerRef.current) return;
-    const container = containerRef.current;
-    const rect = container.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
-    setSliderPosition(percentage);
-  }, [isDragging]);
-
-  const handleTouchMove = useCallback((e) => {
-    if (!isDragging || !containerRef.current) return;
-    const container = containerRef.current;
-    const rect = containerRef.current.getBoundingClientRect();
-    const touch = e.touches[0] || e.changedTouches[0];
-    const x = touch.clientX - rect.left;
-    const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
-    setSliderPosition(percentage);
-  }, [isDragging]);
-
-  const handleMouseDown = useCallback(() => setIsDragging(true), []);
-  const handleMouseUp = useCallback(() => setIsDragging(false), []);
-
-  useEffect(() => {
-    const handleMouseUpGlobal = () => setIsDragging(false);
-    if (isDragging) {
-      window.addEventListener('mouseup', handleMouseUpGlobal);
-      window.addEventListener('mousemove', handleMouseMove);
-    }
-    return () => {
-      window.removeEventListener('mouseup', handleMouseUpGlobal);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [isDragging, handleMouseMove]);
-
-  useEffect(() => {
-    const preloadImages = [beforeImage, afterImage];
-    Promise.all(preloadImages.map(src => {
-      return new Promise((resolve) => {
-        const img = new window.Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = resolve;
-      });
-    })).then(() => setIsLoaded(true));
-  }, [beforeImage, afterImage]);
-
-  if (!isLoaded) return <LoadingSpinner />;
-
+// ImagePopup Component
+const ImagePopup = ({ image, onClose }) => {
   return (
-    <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
-      <div className="relative w-full h-[450px]">
-        <div
-          ref={containerRef}
-          className="relative w-full h-full cursor-ew-resize touch-none select-none"
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onTouchStart={handleMouseDown}
-          onTouchEnd={handleMouseUp}
-          onTouchMove={handleTouchMove}
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onClick={onClose}>
+      <div className="relative max-w-full max-h-full">
+        <Image
+          src={image}
+          alt="Full size"
+          width={800}
+          height={800}
+          className="max-w-screen max-h-screen object-contain"
+        />
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2"
         >
-          <div className="absolute inset-0 w-full h-full overflow-hidden">
-            <Image
-              src={beforeImage}
-              alt="Before treatment"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-            />
-          </div>
-          <div
-            className="absolute inset-0 w-full h-full overflow-hidden"
-            style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
-          >
-            <Image
-              src={afterImage}
-              alt="After treatment"
-              fill
-              className="object-cover my-1.5"
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-            />
-          </div>
-          <div
-            className="absolute top-0 bottom-0 w-1 bg-blue-600 transform -translate-x-1/2"
-            style={{ left: `${sliderPosition}%` }}
-          >
-            <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center border-4 border-white z-20">
-              <div className="w-6 h-0.5 bg-blue-600"></div>
-              <div className="absolute -inset-2 rounded-full border-2 border-blue-200 border-dashed"></div>
-            </div>
-          </div>
-        </div>
-        <div className="absolute top-4 left-4 bg-white bg-opacity-90 px-4 py-2 rounded-full text-sm font-medium text-gray-800 shadow-lg">
-          Before
-        </div>
-        <div className="absolute top-4 right-4 bg-white bg-opacity-90 px-4 py-2 rounded-full text-sm font-medium text-gray-800 shadow-lg">
-          After
-        </div>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
   );
 };
+
+// ImageSlider Component
+const ImageSlider = ({ images, onImageClick, isModal = false }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Reset to first image when images prop changes (when modal opens)
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [images]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  const handleImageClick = (e, image) => {
+    e.stopPropagation();
+    onImageClick(image);
+  };
+
+  return (
+    <div className="relative w-full h-full">
+      <div className="relative w-full h-full overflow-hidden">
+        {images.map((image, index) => (
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: index === currentImageIndex ? 1 : 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Image
+              src={image}
+              alt={`Product Image ${index}`}
+              fill
+              className="object-contain"
+            />
+            {/* {!isModal && (
+              <button
+                onClick={(e) => handleImageClick(e, image)}
+                className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow"
+              >
+                <svg style={{ color: 'grey' }} className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 01-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            )} */}
+          </motion.div>
+        ))}
+      </div>
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              prevImage();
+            }}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow"
+          >
+            <svg style={{ color: 'grey' }} className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              nextImage();
+            }}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow"
+          >
+            <svg style={{ color: 'grey' }} className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
+            {images.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full mx-1 ${index === currentImageIndex ? 'bg-blue-500' : 'bg-gray-300'}`}
+              ></div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+
 
 // FadeInWhenVisible Component
 const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
@@ -513,9 +629,8 @@ const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
   );
 };
 
-// Image Upload Component
-const ImageUpload = ({ image, onImageChange, t }) => {
-  const [previewUrl, setPreviewUrl] = useState(image || '');
+// ImageUpload Component
+const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({ message: '', isError: false });
 
@@ -524,8 +639,10 @@ const ImageUpload = ({ image, onImageChange, t }) => {
     if (!file) return;
 
     const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
+    const totalSize = images.reduce((sum, image) => sum + (image.size || 0), 0) + file.size;
+
+    if (totalSize > maxSize) {
+      setUploadStatus({ message: t('Total image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
 
@@ -543,12 +660,13 @@ const ImageUpload = ({ image, onImageChange, t }) => {
 
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
+
       reader.onload = (event) => {
-        setPreviewUrl(event.target.result);
         onImageChange(event.target.result);
         setUploadStatus({ message: t('Image uploaded successfully'), isError: false });
         setIsLoading(false);
       };
+
       reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error('Error compressing image:', error);
@@ -559,7 +677,7 @@ const ImageUpload = ({ image, onImageChange, t }) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900">{t('Product Image')}</h3>
+      <h3 className="text-lg font-medium text-gray-900">{t('Product Images')}</h3>
       <p className="text-sm text-gray-700">{t('Upload an image')}</p>
       {isLoading && <LoadingSpinner />}
       {uploadStatus.message && (
@@ -567,31 +685,33 @@ const ImageUpload = ({ image, onImageChange, t }) => {
           {uploadStatus.message}
         </div>
       )}
-      <div className="grid gap-4">
-        <div className="space-y-2">
-          <label
-            htmlFor="image-upload"
-            className="block aspect-square rounded-lg border-2 border-dashed cursor-pointer flex flex-col items-center justify-center p-4 relative border-gray-300 hover:border-blue-400 transition-colors"
-          >
-            {previewUrl ? (
-              <div className="relative w-full h-full">
-                <Image
-                  src={previewUrl}
-                  alt="Product preview"
-                  fill
-                  className="object-cover rounded-md"
-                />
-              </div>
-            ) : (
-              <>
-                <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span className="text-sm text-gray-700">{t('Click to upload')}</span>
-              </>
-            )}
+      <div className="grid grid-cols-2 gap-4">
+        {images.map((image, index) => (
+          <div key={index} className="relative aspect-square rounded-lg border-2 border-gray-300 overflow-hidden">
+            <Image
+              src={image}
+              alt={`Product preview ${index}`}
+              fill
+              className="object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => onImageDelete(index)}
+              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        ))}
+        {images.length < 2 && (
+          <label className="aspect-square rounded-lg border-2 border-dashed cursor-pointer flex flex-col items-center justify-center p-4 relative border-gray-300 hover:border-blue-400 transition-colors">
+            <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="text-sm text-gray-700">{t('Click to upload')}</span>
             <input
-              id="image-upload"
               type="file"
               accept="image/*"
               onChange={handleFileChange}
@@ -599,7 +719,7 @@ const ImageUpload = ({ image, onImageChange, t }) => {
               disabled={isLoading}
             />
           </label>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -613,12 +733,11 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     name: product?.name || '',
     category: product?.category || (categories.length > 0 ? categories[0] : ''),
     description: product?.description || '',
-    benefits: product?.benefits || ['', '', '', '', '', '', '', '', '', ''],
-    image: product?.image || '',
+    benefits: product?.benefits && product.benefits.length > 0 ? product.benefits : [''],
+    images: product?.images || [],
     size: product?.size || '',
-    ingredients: product?.ingredients || ['', '', '', '', '', '', '', '', '', ''],
+    ingredients: product?.ingredients && product.ingredients.length > 0 ? product.ingredients : [''],
   });
-
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -628,7 +747,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     if (!formData.category) errors.category = t('category') + ' is required';
     if (!formData.description.trim()) errors.description = t('description') + ' is required';
     if (!formData.size.trim()) errors.size = t('size') + ' is required';
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -636,7 +754,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
     if (validationErrors[name]) {
       setValidationErrors(prev => {
         const newErrors = { ...prev };
@@ -650,16 +767,26 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     const newArray = [...formData[field]];
     newArray[index] = value;
     setFormData(prev => ({ ...prev, [field]: newArray }));
+
+    if (value.trim() !== '' && index === newArray.length - 1 && newArray.length < 10) {
+      newArray.push('');
+      setFormData(prev => ({ ...prev, [field]: newArray }));
+    }
   };
 
-  const handleImageChange = (value) => {
-    setFormData(prev => ({ ...prev, image: value }));
+  const handleImageChange = (image) => {
+    setFormData(prev => ({ ...prev, images: [...prev.images, image] }));
+  };
+
+  const handleImageDelete = (index) => {
+    const newImages = [...formData.images];
+    newImages.splice(index, 1);
+    setFormData(prev => ({ ...prev, images: newImages }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSaving(true);
 
     const filteredBenefits = formData.benefits.filter(benefit => benefit.trim() !== '');
@@ -770,8 +897,9 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
               </div>
               <div>
                 <ImageUpload
-                  image={formData.image}
+                  images={formData.images}
                   onImageChange={handleImageChange}
+                  onImageDelete={handleImageDelete}
                   t={t}
                 />
               </div>
@@ -784,14 +912,14 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
                   {t('Benefits (up to 10)')}
                 </label>
                 <div className="space-y-4">
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+                  {formData.benefits.map((benefit, index) => (
                     <div key={index}>
                       <input
                         type="text"
-                        value={formData.benefits[index] || ''}
+                        value={benefit}
                         onChange={(e) => handleArrayChange(index, e.target.value, 'benefits')}
                         className="w-full px-4 py-3 border text-gray-700 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                        placeholder={t('benefitPlaceholder').replace('{index}', index + 1)}
+                        placeholder={t('Benefit')}
                       />
                     </div>
                   ))}
@@ -818,15 +946,15 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-4">
                   {t('Ingredients (up to 10)')}
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+                <div className="space-y-4">
+                  {formData.ingredients.map((ingredient, index) => (
                     <div key={index}>
                       <input
                         type="text"
-                        value={formData.ingredients[index] || ''}
+                        value={ingredient}
                         onChange={(e) => handleArrayChange(index, e.target.value, 'ingredients')}
                         className="w-full px-4 py-3 border text-gray-700 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                        placeholder={t('ingredientPlaceholder').replace('{index}', index + 1)}
+                        placeholder={t('Ingredient')}
                       />
                     </div>
                   ))}
@@ -870,7 +998,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     subtitle: aboutImageText?.subtitle || 'To ensure the design of finished products',
     description: aboutImageText?.description || 'using the best dermocosmetic ingredients on the market.'
   });
-
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({ message: '', isError: false });
@@ -881,7 +1008,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     if (!formData.title.trim()) errors.title = t('title') + ' is required';
     if (!formData.subtitle.trim()) errors.subtitle = t('subtitle') + ' is required';
     if (!formData.description.trim()) errors.description = t('description') + ' is required';
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -889,7 +1015,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
     if (validationErrors[name]) {
       setValidationErrors(prev => {
         const newErrors = { ...prev };
@@ -923,11 +1048,13 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
 
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
+
       reader.onload = (event) => {
         setFormData(prev => ({ ...prev, image: event.target.result }));
         setUploadStatus({ message: t('Image uploaded successfully'), isError: false });
         setIsLoading(false);
       };
+
       reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error('Error compressing image:', error);
@@ -939,7 +1066,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSaving(true);
 
     try {
@@ -950,7 +1076,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
         description: formData.description,
         image: formData.image
       });
-
       onSave(formData);
     } catch (error) {
       console.error('Error saving about text:', error);
@@ -1227,14 +1352,13 @@ export default function Home() {
     description: 'Certified by international health authorities',
     image: '/about-lab.jpg'
   });
-
+  const [selectedImage, setSelectedImage] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Check if the user is an admin, you might need to fetch this from a database or user claims
-        const isAdminUser = true; // Replace with actual logic to check admin status
+        const isAdminUser = true; // Replace with your actual admin check logic
         setIsAdmin(isAdminUser);
       } else {
         setIsAdmin(false);
@@ -1243,17 +1367,19 @@ export default function Home() {
 
     const fetchInitialData = async () => {
       try {
-        // Fetch products, categories, and about data
+        // Fetch products
         const productsQuery = query(collection(db, 'products'));
         const productsSnapshot = await getDocs(productsQuery);
         const productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setProducts(productsData);
 
+        // Fetch categories
         const categoriesQuery = query(collection(db, 'categories'));
         const categoriesSnapshot = await getDocs(categoriesQuery);
         const categoriesData = categoriesSnapshot.docs.map(doc => doc.data().name);
         setCategories(categoriesData);
 
+        // Fetch about text
         const aboutDocRef = doc(db, 'about', 'imageText');
         const aboutDocSnap = await getDoc(aboutDocRef);
         if (aboutDocSnap.exists()) {
@@ -1268,6 +1394,7 @@ export default function Home() {
 
     fetchInitialData();
 
+    // Set up real-time listeners
     const unsubscribeProducts = onSnapshot(collection(db, 'products'), (querySnapshot) => {
       const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setProducts(productsData);
@@ -1389,6 +1516,14 @@ export default function Home() {
     }
   };
 
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeImagePopup = () => {
+    setSelectedImage(null);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -1440,6 +1575,7 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
 
+        {/* Header */}
         <motion.header
           initial={{ y: -100 }}
           animate={{ y: 0 }}
@@ -1463,6 +1599,8 @@ export default function Home() {
                 />
               </div>
             </motion.div>
+
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1 items-center">
               {['home', 'products', 'about', 'science', 'contact'].map((section, index) => (
                 <motion.button
@@ -1479,6 +1617,8 @@ export default function Home() {
                   {t(section)}
                 </motion.button>
               ))}
+
+              {/* Language Dropdown */}
               <div className="relative">
                 <motion.button
                   onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
@@ -1493,6 +1633,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </motion.button>
+
                 {showLanguageDropdown && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -1520,6 +1661,8 @@ export default function Home() {
                   </motion.div>
                 )}
               </div>
+
+              {/* Admin Logout */}
               {isAdmin && (
                 <motion.button
                   onClick={handleLogout}
@@ -1531,6 +1674,8 @@ export default function Home() {
                 </motion.button>
               )}
             </nav>
+
+            {/* Mobile Menu Button */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               className="md:hidden text-gray-800 focus:outline-none p-2"
@@ -1581,6 +1726,8 @@ export default function Home() {
               </svg>
             </motion.button>
           </div>
+
+          {/* Mobile Menu */}
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div
@@ -1609,6 +1756,8 @@ export default function Home() {
                       {t(section)}
                     </motion.button>
                   ))}
+
+                  {/* Mobile Language Dropdown */}
                   <div className="relative">
                     <motion.button
                       onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
@@ -1621,6 +1770,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </motion.button>
+
                     {showLanguageDropdown && (
                       <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -1648,6 +1798,8 @@ export default function Home() {
                       </motion.div>
                     )}
                   </div>
+
+                  {/* Mobile Admin Logout */}
                   {isAdmin && (
                     <motion.button
                       onClick={() => {
@@ -1667,6 +1819,7 @@ export default function Home() {
           </AnimatePresence>
         </motion.header>
 
+        {/* Hero Section */}
         <section id="home" className="relative pt-28 pb-20 md:pt-36 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -1728,6 +1881,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Products Section */}
         <section id="products" className="py-20 bg-gray-50">
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-16">
@@ -1742,6 +1896,7 @@ export default function Home() {
                 </p>
               </FadeInWhenVisible>
             </div>
+
             <FadeInWhenVisible delay={0.1}>
               <div className="max-w-2xl mx-auto mb-12">
                 <div className="relative text-gray-600">
@@ -1753,11 +1908,12 @@ export default function Home() {
                     className="w-full px-6 py-4 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition shadow-sm"
                   />
                   <svg className="absolute right-4 top-4 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 01-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
               </div>
             </FadeInWhenVisible>
+
             <FadeInWhenVisible delay={0.2}>
               <div className="flex flex-wrap justify-center mb-12 gap-2">
                 {[
@@ -1783,6 +1939,8 @@ export default function Home() {
                 ))}
               </div>
             </FadeInWhenVisible>
+
+            {/* Admin Add Product Button */}
             {isAdmin && (
               <div className="flex justify-end mb-4">
                 <button
@@ -1793,6 +1951,8 @@ export default function Home() {
                 </button>
               </div>
             )}
+
+            {/* Products Grid */}
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {filteredProducts.map((product, index) => (
@@ -1803,14 +1963,9 @@ export default function Home() {
                       className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer relative"
                     >
                       <div className="relative h-56 bg-gray-100">
-                        <Image
-                          src={product.image || '/placeholder.jpg'}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          priority={index < 4}
-                        />
+                        {product.images && product.images.length > 0 && (
+                          <ImageSlider images={product.images} onImageClick={handleImageClick} />
+                        )}
                       </div>
                       <div className="p-6">
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
@@ -1854,13 +2009,9 @@ export default function Home() {
                               }}
                               className="flex-1 flex items-center justify-center py-2 px-3 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all text-sm"
                             >
-                              <Image
-                                src="/trash.png"
-                                alt="trash"
-                                width={20}
-                                height={20}
-                                className="mr-2"
-                              />
+                              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
                               {t('Delete')}
                             </button>
                           </div>
@@ -1884,6 +2035,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Admin Category Management Section */}
         {isAdmin && (
           <section className="py-20 bg-white">
             <div className="container mx-auto px-4 md:px-6">
@@ -1930,6 +2082,7 @@ export default function Home() {
           </section>
         )}
 
+        {/* About Section */}
         <section id="about" className="py-20 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -2060,6 +2213,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
           <div className="container mx-auto px-4 md:px-6 text-center">
             <FadeInWhenVisible>
@@ -2080,7 +2234,6 @@ export default function Home() {
                   onClick={() => scrollToSection('products')}
                   className="bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-lg transition-all duration-200 flex items-center justify-center"
                 >
-                  
                   {t('shopNow')}
                 </motion.button>
                 <motion.button
@@ -2099,6 +2252,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Contact Section */}
         <section id="contact" className="py-20 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-16">
@@ -2147,6 +2301,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Footer */}
         <footer className="bg-gray-900 text-white pt-16 pb-8">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -2298,6 +2453,14 @@ export default function Home() {
           </div>
         </footer>
 
+        {/* Image Popup */}
+        <AnimatePresence>
+          {selectedImage && (
+            <ImagePopup image={selectedImage} onClose={closeImagePopup} />
+          )}
+        </AnimatePresence>
+
+        {/* Product Form Modal */}
         <AnimatePresence>
           {editingProduct !== null && (
             <motion.div
@@ -2327,6 +2490,7 @@ export default function Home() {
           )}
         </AnimatePresence>
 
+        {/* About Text Editor Modal */}
         <AnimatePresence>
           {editingAboutText && (
             <motion.div
@@ -2356,6 +2520,7 @@ export default function Home() {
           )}
         </AnimatePresence>
 
+        {/* Product Details Modal */}
         <AnimatePresence>
           {isModalOpen && selectedProduct && (
             <motion.div
@@ -2376,13 +2541,13 @@ export default function Home() {
                 <div className="flex flex-col md:flex-row">
                   <div className="md:w-1/2 p-6 bg-gray-50">
                     <div className="relative h-64 md:h-full min-h-[300px]">
-                      <Image
-                        src={selectedProduct.image || '/placeholder.jpg'}
-                        alt={selectedProduct.name}
-                        fill
-                        className="object-contain"
-                        priority
-                      />
+                      {selectedProduct.images && selectedProduct.images.length > 0 && (
+                        <ImageSlider
+                          images={selectedProduct.images}
+                          onImageClick={handleImageClick}
+                          isModal={true}
+                        />
+                      )}
                     </div>
                   </div>
                   <div className="md:w-1/2 p-6 overflow-y-auto">

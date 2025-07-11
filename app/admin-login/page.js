@@ -45,7 +45,7 @@ export default function AdminLogin() {
               type="email"
               autoComplete="email"
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+              className="w-full px-4 py-3 rounded-lg text-gray-700 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +62,7 @@ export default function AdminLogin() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                className="w-full px-4 py-3 text-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -95,7 +95,6 @@ export default function AdminLogin() {
             </button>
           </div>
         </form>
-        
       </div>
     </div>
   );
