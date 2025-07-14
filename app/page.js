@@ -69,7 +69,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
-
   const handleMouseMove = useCallback((e) => {
     if (!isDragging || !containerRef.current) return;
     const container = containerRef.current;
@@ -78,7 +77,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
     const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
     setSliderPosition(percentage);
   }, [isDragging]);
-
   const handleTouchMove = useCallback((e) => {
     if (!isDragging || !containerRef.current) return;
     const container = containerRef.current;
@@ -88,10 +86,8 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
     const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
     setSliderPosition(percentage);
   }, [isDragging]);
-
   const handleMouseDown = useCallback(() => setIsDragging(true), []);
   const handleMouseUp = useCallback(() => setIsDragging(false), []);
-
   useEffect(() => {
     const handleMouseUpGlobal = () => setIsDragging(false);
     if (isDragging) {
@@ -103,7 +99,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [isDragging, handleMouseMove]);
-
   useEffect(() => {
     const preloadImages = [beforeImage, afterImage];
     Promise.all(preloadImages.map(src => {
@@ -115,9 +110,7 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
       });
     })).then(() => setIsLoaded(true));
   }, [beforeImage, afterImage]);
-
   if (!isLoaded) return <LoadingSpinner />;
-
   return (
     <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
       <div className="relative w-full h-[450px]">
@@ -172,7 +165,7 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
       </div>
     </div>
   );
-}
+};
 
 // Language translations
 const translations = {
@@ -520,25 +513,20 @@ const ImagePopup = ({ image, onClose }) => {
 // ImageSlider Component
 const ImageSlider = ({ images, onImageClick, isModal = false }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   // Reset to first image when images prop changes (when modal opens)
   useEffect(() => {
     setCurrentImageIndex(0);
   }, [images]);
-
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
-
   const prevImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
-
   const handleImageClick = (e, image) => {
     e.stopPropagation();
     onImageClick(image);
   };
-
   return (
     <div className="relative w-full h-full">
       <div className="relative w-full h-full overflow-hidden">
@@ -556,16 +544,6 @@ const ImageSlider = ({ images, onImageClick, isModal = false }) => {
               fill
               className="object-contain"
             />
-            {/* {!isModal && (
-              <button
-                onClick={(e) => handleImageClick(e, image)}
-                className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow"
-              >
-                <svg style={{ color: 'grey' }} className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 01-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            )} */}
           </motion.div>
         ))}
       </div>
@@ -607,15 +585,12 @@ const ImageSlider = ({ images, onImageClick, isModal = false }) => {
   );
 };
 
-
-
 // FadeInWhenVisible Component
 const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-
   return (
     <motion.div
       ref={ref}
@@ -633,23 +608,18 @@ const FadeInWhenVisible = ({ children, delay = 0, className = '' }) => {
 const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({ message: '', isError: false });
-
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const maxSize = 5 * 1024 * 1024;
     const totalSize = images.reduce((sum, image) => sum + (image.size || 0), 0) + file.size;
-
     if (totalSize > maxSize) {
       setUploadStatus({ message: t('Total image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
-
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
-
       const options = {
         maxSizeMB: 5,
         maxWidthOrHeight: 2048,
@@ -657,16 +627,13 @@ const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
         maxIteration: 20,
         initialQuality: 0.8,
       };
-
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
-
       reader.onload = (event) => {
         onImageChange(event.target.result);
         setUploadStatus({ message: t('Image uploaded successfully'), isError: false });
         setIsLoading(false);
       };
-
       reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error('Error compressing image:', error);
@@ -674,7 +641,6 @@ const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-900">{t('Product Images')}</h3>
@@ -687,7 +653,7 @@ const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
       )}
       <div className="grid grid-cols-2 gap-4">
         {images.map((image, index) => (
-          <div key={index} className="relative aspect-square rounded-lg border-2 border-gray-300 overflow-hidden">
+          <div key={index} className="relative aspect-square rounded-lg border-2 border-gray-300 overflow-hidden bg-white">
             <Image
               src={image}
               alt={`Product preview ${index}`}
@@ -706,7 +672,7 @@ const ImageUpload = ({ images = [], onImageChange, onImageDelete, t }) => {
           </div>
         ))}
         {images.length < 2 && (
-          <label className="aspect-square rounded-lg border-2 border-dashed cursor-pointer flex flex-col items-center justify-center p-4 relative border-gray-300 hover:border-blue-400 transition-colors">
+          <label className="aspect-square rounded-lg border-2 border-dashed cursor-pointer flex flex-col items-center justify-center p-4 relative border-gray-300 hover:border-blue-400 transition-colors bg-white">
             <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -740,7 +706,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
-
   const validateForm = () => {
     const errors = {};
     if (!formData.name.trim()) errors.name = t('productName') + ' is required';
@@ -750,7 +715,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -762,42 +726,34 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
       });
     }
   };
-
   const handleArrayChange = (index, value, field) => {
     const newArray = [...formData[field]];
     newArray[index] = value;
     setFormData(prev => ({ ...prev, [field]: newArray }));
-
     if (value.trim() !== '' && index === newArray.length - 1 && newArray.length < 10) {
       newArray.push('');
       setFormData(prev => ({ ...prev, [field]: newArray }));
     }
   };
-
   const handleImageChange = (image) => {
     setFormData(prev => ({ ...prev, images: [...prev.images, image] }));
   };
-
   const handleImageDelete = (index) => {
     const newImages = [...formData.images];
     newImages.splice(index, 1);
     setFormData(prev => ({ ...prev, images: newImages }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSaving(true);
-
     const filteredBenefits = formData.benefits.filter(benefit => benefit.trim() !== '');
     const filteredIngredients = formData.ingredients.filter(ingredient => ingredient.trim() !== '');
-
     const productData = {
       ...formData,
       benefits: filteredBenefits,
       ingredients: filteredIngredients
     };
-
     try {
       const productRef = doc(db, 'products', productData.id.toString());
       await setDoc(productRef, productData);
@@ -809,7 +765,6 @@ const ProductForm = ({ product, onSave, onCancel, categories, t }) => {
       setIsSaving(false);
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -1002,7 +957,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
   const [isLoading, setIsLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({ message: '', isError: false });
   const [validationErrors, setValidationErrors] = useState({});
-
   const validateForm = () => {
     const errors = {};
     if (!formData.title.trim()) errors.title = t('title') + ' is required';
@@ -1011,7 +965,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -1023,21 +976,17 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
       });
     }
   };
-
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setUploadStatus({ message: t('Image size exceeds the maximum limit of 5MB'), isError: true });
       return;
     }
-
     try {
       setIsLoading(true);
       setUploadStatus({ message: '', isError: false });
-
       const options = {
         maxSizeMB: 5,
         maxWidthOrHeight: 2048,
@@ -1045,16 +994,13 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
         maxIteration: 20,
         initialQuality: 0.8,
       };
-
       const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
-
       reader.onload = (event) => {
         setFormData(prev => ({ ...prev, image: event.target.result }));
         setUploadStatus({ message: t('Image uploaded successfully'), isError: false });
         setIsLoading(false);
       };
-
       reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error('Error compressing image:', error);
@@ -1062,12 +1008,10 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
       setIsLoading(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSaving(true);
-
     try {
       const docRef = doc(db, 'about', 'imageText');
       await setDoc(docRef, {
@@ -1084,7 +1028,6 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
       setIsSaving(false);
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
       <motion.div
@@ -1241,12 +1184,10 @@ const AboutImageTextEditor = ({ aboutImage, aboutImageText, onSave, onCancel, t 
 // ContactOptions Component
 const ContactOptions = ({ t }) => {
   const [activeTab, setActiveTab] = useState('email');
-
   const handleEmailClick = () => {
     const email = t('emailAddress');
     const subject = encodeURIComponent(t('emailSubject'));
     const body = encodeURIComponent(t('emailBody'));
-
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       window.location.href = `googlegmail:///co?subject=${subject}&body=${body}&to=${email}`;
     } else {
@@ -1256,7 +1197,6 @@ const ContactOptions = ({ t }) => {
       }
     }
   };
-
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden mt-15 border border-gray-200">
       <div className="p-6">
@@ -1461,17 +1401,14 @@ export default function Home() {
     e.preventDefault();
     const newCategoryInput = document.getElementById('newCategory');
     const newCategory = newCategoryInput.value.trim();
-
     if (!newCategory) {
       alert('Please enter a category name');
       return;
     }
-
     if (categories.includes(newCategory.toLowerCase())) {
       alert('This category already exists');
       return;
     }
-
     try {
       await addDoc(collection(db, 'categories'), { name: newCategory.toLowerCase() });
       newCategoryInput.value = '';
@@ -1528,10 +1465,8 @@ export default function Home() {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
-
       const sections = ['home', 'products', 'about', 'science', 'contact'];
       let currentSection = 'home';
-
       sections.forEach(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -1541,10 +1476,8 @@ export default function Home() {
           }
         }
       });
-
       setActiveSection(currentSection);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -1569,12 +1502,43 @@ export default function Home() {
     <ErrorBoundary>
       <div className="min-h-screen bg-white font-sans">
         <Head>
-          <title>{t('Sardeli')} | {t('Premium Medical Supplements')}</title>
-          <meta name="description" content={t('High-quality imported medical supplements for your health and wellness')} />
+          <title>Sardeli | Premium Dermocosmetic Products</title>
+          <meta name="description" content="Sardeli offers premium dermocosmetic products backed by science and trusted by healthcare professionals. Explore our range of high-quality skincare solutions." />
+          <meta name="keywords" content="Sardeli, dermocosmetic, skincare, premium skincare, healthcare professionals, cosmetic products, beauty products" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <script type="application/ld+json">
+            {`
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Sardeli",
+                "url": "https://www.sardeli.com",
+                "logo": "https://www.sardeli.com/sardeli_logo.jpg",
+                "description": "Sardeli is a French formulated dermocosmetics Laboratory specializing in the design and manufacture of cosmetic products with high added value, precision and innovation.",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "2 Rue Pierre Josse",
+                  "addressLocality": "Bondoufle",
+                  "postalCode": "91070",
+                  "addressCountry": "France"
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": "+33-1-23-45-67-89",
+                  "contactType": "customer service",
+                  "email": "info@sardeli.fr"
+                },
+                "sameAs": [
+                  "https://www.facebook.com/sardeli",
+                  "https://www.twitter.com/sardeli",
+                  "https://www.instagram.com/sardeli",
+                  "https://www.linkedin.com/company/sardeli"
+                ]
+              }
+            `}
+          </script>
         </Head>
-
         {/* Header */}
         <motion.header
           initial={{ y: -100 }}
@@ -1599,7 +1563,6 @@ export default function Home() {
                 />
               </div>
             </motion.div>
-
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1 items-center">
               {['home', 'products', 'about', 'science', 'contact'].map((section, index) => (
@@ -1617,7 +1580,6 @@ export default function Home() {
                   {t(section)}
                 </motion.button>
               ))}
-
               {/* Language Dropdown */}
               <div className="relative">
                 <motion.button
@@ -1633,7 +1595,6 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </motion.button>
-
                 {showLanguageDropdown && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -1661,7 +1622,6 @@ export default function Home() {
                   </motion.div>
                 )}
               </div>
-
               {/* Admin Logout */}
               {isAdmin && (
                 <motion.button
@@ -1674,7 +1634,6 @@ export default function Home() {
                 </motion.button>
               )}
             </nav>
-
             {/* Mobile Menu Button */}
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -1726,7 +1685,6 @@ export default function Home() {
               </svg>
             </motion.button>
           </div>
-
           {/* Mobile Menu */}
           <AnimatePresence>
             {isMenuOpen && (
@@ -1756,7 +1714,6 @@ export default function Home() {
                       {t(section)}
                     </motion.button>
                   ))}
-
                   {/* Mobile Language Dropdown */}
                   <div className="relative">
                     <motion.button
@@ -1770,7 +1727,6 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </motion.button>
-
                     {showLanguageDropdown && (
                       <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -1798,7 +1754,6 @@ export default function Home() {
                       </motion.div>
                     )}
                   </div>
-
                   {/* Mobile Admin Logout */}
                   {isAdmin && (
                     <motion.button
@@ -1818,7 +1773,6 @@ export default function Home() {
             )}
           </AnimatePresence>
         </motion.header>
-
         {/* Hero Section */}
         <section id="home" className="relative pt-28 pb-20 md:pt-36 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
           <div className="container mx-auto px-4 md:px-6">
@@ -1880,7 +1834,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* Products Section */}
         <section id="products" className="py-20 bg-gray-50">
           <div className="container mx-auto px-4 md:px-6">
@@ -1896,7 +1849,6 @@ export default function Home() {
                 </p>
               </FadeInWhenVisible>
             </div>
-
             <FadeInWhenVisible delay={0.1}>
               <div className="max-w-2xl mx-auto mb-12">
                 <div className="relative text-gray-600">
@@ -1913,7 +1865,6 @@ export default function Home() {
                 </div>
               </div>
             </FadeInWhenVisible>
-
             <FadeInWhenVisible delay={0.2}>
               <div className="flex flex-wrap justify-center mb-12 gap-2">
                 {[
@@ -1939,7 +1890,6 @@ export default function Home() {
                 ))}
               </div>
             </FadeInWhenVisible>
-
             {/* Admin Add Product Button */}
             {isAdmin && (
               <div className="flex justify-end mb-4">
@@ -1951,7 +1901,6 @@ export default function Home() {
                 </button>
               </div>
             )}
-
             {/* Products Grid */}
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -1962,7 +1911,7 @@ export default function Home() {
                       whileTap={{ scale: 0.98 }}
                       className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer relative"
                     >
-                      <div className="relative h-56 bg-gray-100">
+                      <div className="relative h-56 bg-white">
                         {product.images && product.images.length > 0 && (
                           <ImageSlider images={product.images} onImageClick={handleImageClick} />
                         )}
@@ -2034,7 +1983,6 @@ export default function Home() {
             )}
           </div>
         </section>
-
         {/* Admin Category Management Section */}
         {isAdmin && (
           <section className="py-20 bg-white">
@@ -2081,7 +2029,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
         {/* About Section */}
         <section id="about" className="py-20 bg-white">
           <div className="container mx-auto px-4 md:px-6">
@@ -2212,7 +2159,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
           <div className="container mx-auto px-4 md:px-6 text-center">
@@ -2251,7 +2197,6 @@ export default function Home() {
             </FadeInWhenVisible>
           </div>
         </section>
-
         {/* Contact Section */}
         <section id="contact" className="py-20 bg-white">
           <div className="container mx-auto px-4 md:px-6">
@@ -2300,7 +2245,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* Footer */}
         <footer className="bg-gray-900 text-white pt-16 pb-8">
           <div className="container mx-auto px-4 md:px-6">
@@ -2452,14 +2396,12 @@ export default function Home() {
             </div>
           </div>
         </footer>
-
         {/* Image Popup */}
         <AnimatePresence>
           {selectedImage && (
             <ImagePopup image={selectedImage} onClose={closeImagePopup} />
           )}
         </AnimatePresence>
-
         {/* Product Form Modal */}
         <AnimatePresence>
           {editingProduct !== null && (
@@ -2489,7 +2431,6 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-
         {/* About Text Editor Modal */}
         <AnimatePresence>
           {editingAboutText && (
@@ -2519,7 +2460,6 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-
         {/* Product Details Modal */}
         <AnimatePresence>
           {isModalOpen && selectedProduct && (
