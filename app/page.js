@@ -1198,13 +1198,17 @@ const ContactOptions = ({ t }) => {
     }
   };
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden mt-15 border border-gray-200">
+
+
+
+    
+    <div className="bg-white rounded-2xl shadow-xl  overflow-hidden mt-15 border border-gray-200">
       <div className="p-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">{t('Contact Options')}</h3>
         <p className="text-gray-600 mb-8 text-center">{t('contact us')}</p>
         <div className="flex justify-center mb-6">
           <div className="inline-flex rounded-full bg-gray-100 p-1">
-            {/* Add your tabs here */}
+      
           </div>
         </div>
         <AnimatePresence mode="wait">
@@ -2216,7 +2220,8 @@ export default function Home() {
               <div className="lg:order-2">
                 <ContactOptions t={t} />
               </div>
-              <div className="lg:order-1">
+              {/* this is location part */}
+              {/* <div className="lg:order-1">
                 <FadeInWhenVisible>
                   <h3 className="text-xl font-bold text-gray-900 mb-6 text-center lg:text-left">
                     {t('Our Location')}
@@ -2241,7 +2246,7 @@ export default function Home() {
                     ></iframe>
                   </div>
                 </FadeInWhenVisible>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
